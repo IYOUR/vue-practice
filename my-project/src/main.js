@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// debug
+Vue.config.debug = true
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
