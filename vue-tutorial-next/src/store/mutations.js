@@ -12,7 +12,7 @@ export default {
     const avatar = 'https://sfault-avatar.b0.upaiyun.com/147/223/147223148-573297d0913c5_huge256';
     
     state.list.push(
-      Object.assign({ name: '二哲', avatar: avatar }, plan)
+      Object.assign({ name: 'IYOUR', avatar: avatar }, plan)
     )
   },
   [types.DELETE_PLAN] (state, idx) {
