@@ -32,7 +32,7 @@
 |-- .editorconfig                    // 定义代码格式
 |-- .gitignore                       // git上传需要忽略的文件格式
 |-- README.md                        // 项目说明
-|-- favicon.ico 
+|-- favicon.ico                      // 浏览器标签图标
 |-- index.html                       // 入口页面
 |-- package.json                     // 项目基本信息
 ```
