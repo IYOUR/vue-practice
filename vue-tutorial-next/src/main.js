@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
-
+ 
 const routes = [{
   path : '/',
   component : Home
