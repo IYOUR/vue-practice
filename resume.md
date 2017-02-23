@@ -6,6 +6,7 @@ Web相关技能
 熟悉git版本管理以及gulp等前端自动化工具的使用,有团队协作经验。
 曾获得全国大学生计算机设计大赛西北赛区二等奖
 GitHub：https://github.com/iyour
+Blog: http://www.iyour.site
 多媒体相关技能  
 熟悉Photoshop，lightroom以及视频剪辑等软件的使用
 具有一定的平面设计能力
