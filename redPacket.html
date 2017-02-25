@@ -1,0 +1,809 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+	response.setHeader("Pragma", "No-cache");
+	response.setHeader("Cache-Control",
+			"no-cache, no-store, must-revalidate");
+	response.setDateHeader("Expires", 0);
+%>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<!-- 优先使用 IE 最新版本和 Chrome -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<!-- 强制缓存 -->
+<meta http-equiv="Cache-Control"
+	content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<!-- 为移动设备添加 viewport -->
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+<title>${pageName}</title>
+<link rel="stylesheet" href="/ledoya/jsp/wechat/happy/happy.css">
+</head>
+<body>
+	<!-- 内容 -->
+	<div class="shake-body">
+		<img src="/ledoya/jsp/wechat/images/circular.png" id='turn'>
+
+		<div id="shake">
+			<img id='shake_img' src="/ledoya/jsp/wechat/images/shakeHand.png">
+		</div>
+
+		<div id='desert'>
+			<img src="/ledoya/jsp/wechat/images/desert.png">
+		</div>
+		<div id="footer">
+			<span>摇动手机 立即领钱</span><br>
+			<h5>
+				今天还有<span class="shake-times">3</span>次机会
+			</h5>
+		</div>
+	</div>
+	<!-- 摇中红包或卡券弹出层 -->
+	<div class="card-window window-hide">
+		<!-- <div class="card-window window-show"> -->
+		<div class="card-container">
+
+			<div class="card-head col-35">
+				<!-- <div id="userName">校园歌手大赛</div>
+			-->
+				<a href="##" class="ad-link">
+					<div class="card-head-img">
+						<img src="/ledoya/jsp/wechat/images/card-head.png" alt=""> <span>查看详情&nbsp
+							></span>
+					</div>
+				</a>
+			</div>
+			<div class="card-logo">
+				<!-- <img id="logo" src="http://wechatcdn.b0.upaiyun.com/images/xd.png" />
+			-->
+				<img id="logo" src="/ledoya/jsp/wechat/images/logo.png" />
+			</div>
+			<div class="card-body">
+				<div class="card-body-outer">
+					<div class="s2">
+						<div class="s2-main">乐豆呀的现金红包</div>
+						<div class="s2-sub">
+							5.00<span>元</span>
+						</div>
+					</div>
+					<div class="s3">
+						<p class="total-text">
+							已累计摇到了 <span class="total-money">${moneyInfo}</span> 元，继续加油
+						</p>
+						-->
+					</div>
+				</div>
+			</div>
+			<div class="card-foot">
+				<!-- <li class="btn btn-yellow">
+		<a id="get-card" data-click="true" href="##">立即领取</a>
+	</li>
+	-->
+				<li class="btn"><a id="again" href="##">再摇一次</a></li>
+			</div>
+		</div>
+	</div>
+	<!--二维码弹出窗口-->
+	<!--<div class="packet-window window-hide">
+		<div class="redpacket-container">
+			<p class="head-text">绿豆芽科技</p>
+			<div class="card-logo">
+				<img class="headLogo" id="logo" src="/ledoya/jsp/wechat/images/logo.png" />
+			</div>
+
+			<div class="QRcode">
+					<img src="/ledoya/jsp/wechat/images/qr.png">
+			</div>
+			<p class="foot-text"><span class="foot-text foot-money">1.28</span>元现金红包将在1小时内由商家赞助发放</p>	
+		</div>		
+	</div>-->
+	<audio id="musicBox" preload="preload" style="display: none;"
+		controls="false" src="http://wechatcdn.b0.upaiyun.com/mp3/shake.mp3" />
+	<script src="http://wechatcdn.b0.upaiyun.com/js/zepto.min.js"
+		type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript"
+		src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="/ledoya/js/share.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script>
+		$(function() {
+			//设置摇动类型为happyPage
+			sessionStorage.setItem("shakeType", "happy");
+			// 以下数据由后台直接直接传递
+			var activityId = "${activityId}", openId = "${openId}", phone = "${phone}", timesInfo = "${timesInfo}", subscribe = "${subscribe}", shakeImgUrl = "${shakeImgUrl}", background_url = "${background_url}", share = "${share}", pageName = "${pageName}";
+			moneyInfo = "${moneyInfo}";
+			// alert("获取到数据:"+"openId="+ openId);
+			//页面加载完成时更新title
+			if (pageName != '') {
+				$('title').html(pageName);
+				setItem("pageName", pageName);
+			} else {
+				$('title').html(getItem("pageName"));
+			}
+			if (activityId != "") {
+				setItem("activityId", activityId);
+			} else {
+				activityId = getItem("activityId");
+				if (activityId == undefined) {
+					alert('活动id无法读取');
+				}
+			}
+			if (openId != "") {
+				setItem("openId", openId);
+			} else {
+				openId = getItem("openId");
+			}
+			if (phone != "") {
+				setItem("phone", phone);
+			} else {
+				phone = getItem("phone");
+			}
+			setItem("share", share);
+			if (timesInfo != "") {
+				setItem("timesInfo", timesInfo);
+			} else {
+				timesInfo = getItem("timesInfo");
+			}
+
+			if (timesInfo <= 0) {
+				noChance();
+			}
+
+			/* 更新剩余次数 */
+			$('#footer h5')
+					.html(
+							'今天还有<span class="shake-times">' + timesInfo
+									+ '</span>次机会');
+			// alert(timesInfo);
+			if (subscribe != "") {
+				setItem("subscribe", subscribe);
+			} else {
+				subscribe = getItem("subscribe");
+			}
+
+			if (shakeImgUrl.length > 10) {
+				// 有背景图片,存在本地
+				setItem("shakeImgUrl", shakeImgUrl);
+			}
+			if (shakeImgUrl == "none") {
+				setItem("shakeImgUrl", '');
+			}
+
+			if (shakeImgUrl.length === 0) {
+				//  二次进入,从本地读取,这个确保是先前有背景图片下才读取
+				//alert('二次进入');
+				shakeImgUrl = getItem("shakeImgUrl");
+				if (shakeImgUrl == undefined) {
+					shakeImgUrl = '';
+				}
+			}
+
+			if (shakeImgUrl.length > 10) {
+				$("#shakeImg").css("width", '300px');
+				$("#shakeImg").css("height", '300px');
+				$("#shakeImg").attr("src", shakeImgUrl);
+				$(".circle").css("background-color", "rgba(0,0,0,0)");
+			} else {
+				$("#shakeImg")
+						.attr("src", "/ledoya/jsp/wechat/images/tree.png");
+			}
+
+			if (background_url.length > 10) {
+				// 有背景图片,存在本地
+				setItem("background_url", background_url);
+			}
+			if (background_url == "none") {
+				setItem("background_url", '');
+			}
+
+			if (background_url.length === 0) {
+				//  二次进入,从本地读取,这个确保是先前有背景图片下才读取
+				//alert('二次进入');
+				background_url = getItem("background_url");
+				if (background_url == undefined) {
+					background_url = '';
+				}
+			}
+			// 设置背景
+			if (background_url.length > 10) {
+				$("body").css(
+						{
+							"background" : "url(" + background_url
+									+ ") #ac0018 no-repeat 0 0 ",
+							"-webkit-background-size" : "cover"
+						});
+				$(".title").text("");
+				$(".desc").text("");
+				$(".circle").css("opacity", "0");
+				$(".circle").css("background", "rgba(0,0,0,0)");
+			}
+			// 延迟100ms添加事件监听,预防微信页面加载未完成而提前可以摇动
+			var addEven = setTimeout(function() {
+				//alert('添加监听')
+				window.addEventListener('devicemotion', deviceMotionHandler,
+						false);
+				clearTimeout(addEven);
+			}, 100);
+			// 发送请求
+			function sendData(type, url, data, success) {
+				var sendData = null;
+				if (type.toUpperCase() === "GET") {
+					sendData = data;
+				} else {
+					sendData = JSON.stringify(data);
+				}
+				$.ajax({
+					type : type,
+					url : url,
+					async : true,
+					'dataType' : 'json',
+					'contentType' : 'application/json;charset=utf-8',
+					data : sendData,
+					complete : complete,
+					success : success,
+					error : fail
+				});
+			};
+			// 失败处理
+			function fail(XMLHttpRequest, textStatus, errorThrown) {
+				//window.location.reload();
+				alert("网络开小差了,请检查网络是否畅通");
+			}
+			// 请求结束
+			function complete() {
+				isSend = false;
+			}
+			// 弹出层发送请求
+			function cardSendData(type, url, data, success) {
+				$.ajax({
+					type : type,
+					url : url,
+					async : true,
+					'dataType' : 'json',
+					'contentType' : 'application/json;charset=utf-8',
+					data : JSON.stringify(data),
+					success : success,
+					beforeSend : beforeSend,
+					error : fail
+				});
+			};
+			// 发送之前
+			function beforeSend() {
+				$(".btn-yellow").html('<a href="##">领取中...</a>');
+			}
+			function setItem(key, value) {
+				localStorage.setItem(key, value);
+			}
+			// 获取localStorage的值
+			function getItem(key) {
+				return localStorage.getItem(key);
+			}
+			// 没有摇奖次数
+			function noChance() {
+				// 没有摇奖次数后跳转
+				sessionStorage.setItem("actStatus", "stop");
+				//  window.location.href = "";
+				var sendObj = {
+					openId : openId,
+					activityId : parseInt(activityId),
+					phone : phone
+				};
+				sendData('POST', "/ledoya/expage/noChance.do", sendObj,
+						function(data) {
+						});
+			}
+			// 检测是否有某个class
+			var shake_times = sessionStorage.getItem("shake_times");
+			if (shake_times == undefined) {
+				sessionStorage.setItem("shake_times", 0);
+				shake_times = sessionStorage.getItem("shake_times");
+			}
+			var isShake = false;// 发送标志位
+			var isSend = false;// 摇动标志位
+			var isShow = false;// 弹窗显示标志位
+			var timerStatus = false;
+			// 发送数据,判断活动是否开始
+			////////////////////////////////////
+			var SHAKE_THRESHOLD = 1800; //定义一个摇动的阈值
+			var last_update = 0; //定义一个变量记录上一次摇动的时间
+			var count = times = 0;
+			var x = y = z = last_x = last_y = last_z = 0; //定义x、y、z记录三个轴的数据以及上一次触发的时间
+			// 1.判断活动进行/尚未开始/已结束 2.中奖逻辑 3.获取优惠券相关信息 4.获取红包相关信息
+			var media = document.getElementById("musicBox"); //获取音频控件
+			var handObj = $('.shake-hand').get(0);
+			var tipsObj = $('#footer').get(0);
+
+			function deviceMotionHandler(eventData) {
+			
+				//获取含重力加速
+				var acceleration = eventData.accelerationIncludingGravity;
+				var curTime = new Date().getTime(); //获取当前时间戳
+				var diffTime = curTime - last_update;
+				if (diffTime > 100) {
+					last_update = curTime; //记录上一次摇动的时间
+					x = acceleration.x; //获取加速度X方向
+					y = acceleration.y; //获取加速度Y方向
+					z = acceleration.z; //获取加速度垂直方向
+					var speed = Math.abs(x + y + z - last_x - last_y - last_z)
+							/ diffTime * 10000;
+					if (isShake == false && isShow == false) {
+						if (speed > SHAKE_THRESHOLD) {
+							isShake = true;
+							// media.play();
+							// setTimeout(function() {
+
+							// document.getElementById("musicBox").play();
+							// }, 300);
+							$('#shake_img').addClass('shake');
+							$('.card-window').removeClass(
+									'window-hide window-show');
+							$('.card-window').addClass('window-hide');
+
+							setTimeout(function() {
+								$('.card-window').css('opacity', '0');
+							}, 300)
+
+							// $('#footer').addClass('translate-tips');
+							var times = localStorage.getItem("timesInfo");
+							times--;
+							if (times <= 0) {
+								times = 0;
+							}
+							localStorage.setItem("timesInfo", times);
+						}
+					}
+					// alert("isShake:"+isShake);
+					// alert("timerStatus:"+timerStatus);
+					if (isShake == true && timerStatus == false
+							&& isShow == false) {
+						if (speed < 500) {
+							timerStatus = true;
+							var delayTimer = setTimeout(
+									function() {
+										timerStatus = false;
+										// 关闭动画
+										// 关闭音乐
+										for (var i = 0; i < 15; i++) {
+											// media.pause();
+										}
+
+										// 摇动标志位
+										isShake = false;
+										if (isSend == false) {
+											// 发送请求
+											isSend = true;
+											if (sessionStorage
+													.getItem("actStatus") == "stop") {
+												// 请求次数已经用完
+												noChance();
+											}
+											//if(sessionStorage.getItem("actStatus")!="stop" ) {
+											shake_times = parseInt(shake_times) + 1;
+											localStorage.setItem("shake_times",
+													shake_times);
+											var sendObj = {
+												openId : openId,
+												activityId : parseInt(activityId),
+												phone : phone
+												/* ,timesInfo : timesInfo,
+												times : parseInt(shake_times) */
+											};
+											// sendObj=JSON.stringify(sendObj);
+											// alert("发送数据:"+sendObj.activityId);
+											sendData(
+													'POST',
+													"/ledoya/expage/shakeHappy.do",
+													sendObj,
+													function(data) {
+														// 请求返回
+													
+														 alert(JSON.stringify(data));
+														if (typeof data != "object") {
+															alert("返回数据异常!!!");
+															return;
+														}
+														$('#footer h5')
+																.html(
+																		'今天还有<span class="shake-times">'
+																				+ data.timeLeft
+																				+ '</span>次机会');
+
+														if (data.timeLeft >= 0) {
+															//alert("返回信息:"+data.code);
+															// 次数没用完
+															//alert("返回数据:")
+															if (data.code == 0
+																	|| data.code == 1) {
+																// 中红包或者优惠券的公共数据写入session
+																// 是否关注公众号
+																setItem(
+																		"subscribe",
+																		subscribe);
+																setItem(
+																		"happyCode",
+																		data.happyCode);
+																// 商家名称
+																setItem(
+																		"userName",
+																		data.userName);
+																// 活动id
+																setItem(
+																		"activityId",
+																		activityId);
+																setItem(
+																		"logo",
+																		data.logo);
+																setItem(
+																		"openId",
+																		openId);
+																//setItem("wxQR", data.wxQR);
+
+															}
+															if (data.code == 0) {
+																// 摇中红包
+																//alert("摇中红包了:)=");
+																$('#shake_img')
+																		.removeClass(
+																				'shake');
+																setItem("type",
+																		"redbag");
+																setItem(
+																		"amount",
+																		data.amount);
+																setItem(
+																		"desc",
+																		data.desc);
+																setItem(
+																		"addimage_url",
+																		data.addimage_url);
+																setItem(
+																		"add_navigation_url",
+																		data.add_navigation_url);
+																cardPop(data.timeLeft);
+																setTimeout(
+																		function() {
+																			isShow = true;
+																			$(
+																					'.tree')
+																					.removeClass(
+																							'on');
+																			$(
+																					'.card-window')
+																					.css(
+																							'opacity',
+																							'1');
+																			$(
+																					'.card-window')
+																					.removeClass(
+																							'window-hide window-show');
+																			$(
+																					'.card-window')
+																					.addClass(
+																							'window-show');
+																			$(
+																					'#footer h4')
+																					.text(
+																							'摇一摇，摇出惊喜');
+																			$(
+																					'#footer h4')
+																					.removeClass(
+																							'no-prize');
+																		}, 500);
+															} else if (data.code == 1) {
+																// 摇中优惠券
+																//alert("摇中优惠券了:)=");
+																$('#shake_img')
+																		.removeClass(
+																				'shake');
+																setItem("type",
+																		"coupon");
+																setItem(
+																		"disSmallName",
+																		data.disSmallName);
+																setItem(
+																		"disName",
+																		data.disName);
+																setItem(
+																		"enterType",
+																		"get");
+																setItem(
+																		"addimage_url",
+																		data.addimage_url);
+																setItem(
+																		"add_navigation_url",
+																		data.add_navigation_url);
+																cardPop(data.timeLeft);
+																setTimeout(
+																		function() {
+																			isShow = true;
+																			$(
+																					'.tree')
+																					.removeClass(
+																							'on');
+																			$(
+																					'.card-window')
+																					.css(
+																							'opacity',
+																							'1');
+																			$(
+																					'.card-window')
+																					.removeClass(
+																							'window-hide window-show');
+																			$(
+																					'.card-window')
+																					.addClass(
+																							'window-show');
+																			$(
+																					'#footer h4')
+																					.text(
+																							'摇一摇，摇出惊喜');
+																			$(
+																					'#footer h4')
+																					.removeClass(
+																							'no-prize');
+																		}, 500);
+															} else if (data.code == 2) {
+																// 没有中奖
+																if (data.timeLeft <= 0) {
+																	//noChance();
+
+																} else {
+																	$(
+																			'#shake_img')
+																			.removeClass(
+																					'shake');
+																	//	$('.tree').removeClass('on');
+																	$(
+																			'#footer h4')
+																			.text(
+																					'很遗憾,未摇到');
+																	$(
+																			'#footer h4')
+																			.addClass(
+																					'no-prize');
+																	$(
+																			'#footer h5')
+																			.html(
+																					'今天还有<span class="shake-times">'
+																							+ data.timeLeft
+																							+ '</span>次机会');
+																}
+
+																//sessionStorage.setItem("actStatus","stop");
+																//window.addEventListener('devicemotion', deviceMotionHandler, false);
+
+															}else if (data.code == 3){
+															$('#shake_img')
+																		.removeClass(
+																				'shake');
+																setItem("type",
+																		"redbag");
+																setItem(
+																		"amount",
+																		data.amount);
+																setItem(
+																		"desc",
+																		data.desc);
+																setItem(
+																		"addimage_url",
+																		data.addimage_url);
+																setItem(
+																		"add_navigation_url",
+																		data.add_navigation_url);
+																cardPop(data.timeLeft);
+																setTimeout(
+																		function() {
+																			isShow = true;
+																			$(
+																					'.tree')
+																					.removeClass(
+																							'on');
+																			$(
+																					'.card-window')
+																					.css(
+																							'opacity',
+																							'1');
+																			$(
+																					'.card-window')
+																					.removeClass(
+																							'window-hide window-show');
+																			$(
+																					'.card-window')
+																					.addClass(
+																							'window-show');
+																			$(
+																					'#footer h4')
+																					.text(
+																							'摇一摇，摇出惊喜');
+																			$(
+																					'#footer h4')
+																					.removeClass(
+																							'no-prize');
+																		}, 500);
+															} else {
+																// 出错
+																alert("请刷新该页面:),如果错误无法解决请联系商家:)=");
+															}
+														} else {
+															// 次数已经用完
+															noChance();
+															return;
+														}
+
+													});
+											// }
+										}
+									}, 100);//end timer
+						}
+					}
+					last_x = x;
+					last_y = y;
+					last_z = z;
+				}// end diffTime
+			}
+			// 分享微信
+			// share为true时启用分享
+			if (share) {
+				shareURL('show', activityId, phone);
+			} else {
+				shareURL('hidden', null, null);
+			}
+
+			// 关闭弹出层
+			$('.card-close').click(function() {
+				isShow = false;
+				/* 		    	if(parseInt($('.shake-times').text()) === 0){
+				 window.location.href = "/ledoya/jsp/wechat/happy/nochance.html";
+				 } 
+				 else
+				 */
+				{
+					$('.card-window').removeClass('window-hide window-show');
+					$('.card-window').addClass('window-hide');
+					setTimeout(function() {
+						$('.card-window').css('opacity', '0');
+					}, 300);
+				}
+			});
+			// 再摇一次
+			$('#again').parent().click(function() {
+				isShow = false;
+				/* if(parseInt($('.shake-times').text()) === 0){
+					window.location.href = "/ledoya/jsp/wechat/happy/nochance.html";
+				}
+				else
+				 */
+				{
+					$('.card-window').removeClass('window-hide window-show');
+					$('.card-window').addClass('window-hide');
+					setTimeout(function() {
+						$('.card-window').css('opacity', '0');
+					}, 300);
+				}
+			});
+
+			// card.jsp中js
+			// 弹出层信息更改
+			var cardPop = function(timeLeft) {
+				// $(".btn-yellow").css("background", "#f0464c");
+				$(".btn-yellow").off("click");
+				// 类型
+				var type = getItem("type"), userName = getItem("userName"), happyCode = getItem("happyCode"), activityId = getItem("activityId"), subscribe = getItem("subscribe"), logo = getItem("logo"), openId = getItem("openId"), adImg = getItem("addimage_url"), adUrl = getItem("add_navigation_url");
+				// 设置logo
+				// alert(getItem("logo"));
+				$("#logo").attr("src", getItem("logo"));
+				// alert(adImg);
+				// alert(adUrl);
+				// 设置广告图片和广告链接
+				$(".card-head-img img").attr("src", adImg);
+				$(".card-head-img").click(function() {
+					window.location.href = adUrl;
+				});
+				if (type === "redbag") {
+					// 红包
+					// 在card-body-outer中填入s2
+					$('.card-body-outer').html(
+							'<div class="s2">' + '<div class="s2-main"></div>'
+									+ '<div class="s2-sub"></div>' + '</div>');
+					$(".s2-main").text(getItem("userName") + '的现金红包');
+					$(".s2-sub").html(getItem("amount") + '<span>元</span>');
+					// $('.s2-footer').text(getItem("userName")
+					// 	+'欢迎您的到来'
+					// );
+					if (timeLeft == 0) {
+
+						$(".btn-yellow")
+								.html(
+										'<a id="get-card" data-click="true">领取现金红包</a>');
+						// 领取红包
+						$(".btn-yellow")
+								.on(
+										'click',
+										'a[data-click="true"]',
+										function() {
+											cardSendData(
+													'POST',
+													'/ledoya/happy/getRedInfo.do',
+													{
+														openId : openId,
+														happyCode : happyCode,
+														activityId : activityId
+													},
+													function(data) {
+														// alert(JSON.stringify(data));
+														if (data.code == 1) {
+															alert("领取失败!多尝试几次");
+															$(".btn-yellow")
+																	.html(
+																			'<a id="get-card" data-click="true">立即领取</a>');
+														} else if (data.code == 0) {
+															alert("领取成功,网络原因可能会有延迟40分左右收到红包:)");
+															$(".btn-yellow")
+																	.html(
+																			"<a style='background:#7B7D7A'>已领取</a>");
+														} else if (data.code == 2) {
+															// 已领取
+															alert('不要那么贪心:(,你领取过了');
+															$(".btn-yellow")
+																	.html(
+																			"<a style='background:#7B7D7A'>已领取</a>");
+														} else {
+															alert("多试几次:)");
+														}
+													});
+											return false;
+										});
+
+					} else {
+						$('.tree').removeClass('on');
+						$('.card-window').css('opacity', '1');
+						$('.card-window')
+								.removeClass('window-hide window-show');
+						$('.card-window').addClass('window-show');
+						$('#footer h4').text('摇一摇，摇出惊喜');
+						$('#footer h5').html(
+								'今天还有<span class="shake-times">' + timesInfo
+										+ '</span>次机会');
+						$('#footer h4').removeClass('no-prize');
+					}
+				} else if (type === "coupon") {
+					$(".btn-yellow").html(
+							'<a id="get-card" data-click="true">立即领取</a>');
+					$(".btn-yellow").on(
+							'click',
+							'a[data-click="true"]',
+							function() {
+								$("#get-card").attr("href",
+										"/ledoya/jsp/wechat/card-info.jsp");
+								$("#get-card").click();
+								return false;
+							});
+					// 优惠券
+					// 在card-body-outer中填入s3
+					$('.card-body-outer')
+							.html(
+									'<div class="s3">'
+											+ '<div class="s3-main"></div><div class="s3-side">'
+											+ '<div class="s3-sub"></div>'
+											+ '<div class="s3-footer"></div></div>'
+											+ '</div>');
+					// 优惠劵背景图
+					// $(".card-body-outer").css("background",
+					// 	"url(http://wechatcdn.b0.upaiyun.com/images/coupon.png) no-repeat");
+					$("#get-card").attr("href",
+							"/ledoya/jsp/wechat/card-info.jsp");
+					$(".s3-main").text(getItem("userName") + '的优惠劵');
+					$(".s3-sub").text(getItem("disName"));
+					$(".s3-footer").html(getItem("disSmallName"));
+				} else {
+					alert('错误的请求方式,请注意参数');
+					return;
+				}
+			};
+		});
+	</script>
+</body>
+</html>
