@@ -46,23 +46,9 @@
         <Menu mode="horizontal" theme="dark" active-key="1">
             <div class="layout-logo"></div>
             <div class="layout-nav">
-                <Menu-item key="1">
-                    <Icon type="ios-navigate"></Icon>
-                    导航一
-                </Menu-item>
-                <Menu-item key="2">
-                    <Icon type="ios-keypad"></Icon>
-                    导航二
-                </Menu-item>
-                <Menu-item key="3">
-                    <Icon type="ios-analytics"></Icon>
-                    导航三
-                </Menu-item>
-                <Menu-item key="4">
-                    <Icon type="ios-paper"></Icon>
-                    导航四
-                </Menu-item>
+                 <i-input icon="ios-clock-outline" placeholder="请输入..." style="width: 200px;"></i-input>
             </div>
+            
         </Menu>
 
       
