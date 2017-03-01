@@ -44,11 +44,22 @@
 <template>
     <div class="layout">
         <Menu mode="horizontal" theme="dark" active-key="1">
-            <div class="layout-logo"></div>
-            <div class="layout-nav">
-                 <i-input icon="ios-clock-outline" placeholder="请输入..." style="width: 200px;"></i-input>
-            </div>
-            
+            <row> 
+                <i-col span="6"><div class="layout-logo"></div></i-col>
+                <i-col span="8">
+                    <div> 
+                        <i-input type="text" placeholder="请输入..." style="width: 40%;"></i-input>
+                        <i-button type="primary" shape="circle" icon="ios-search"></i-button>
+                    </div>
+                </i-col>
+                <i-col span="2" offset="8">
+                   
+                        <i-button type="text" size="large">登陆/注册</i-button>
+                   
+                </i-col>
+                        
+                
+            </row>    
         </Menu>
 
       
