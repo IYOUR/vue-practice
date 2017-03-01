@@ -52,10 +52,11 @@
                         <i-button type="primary" shape="circle" icon="ios-search"></i-button>
                     </div>
                 </i-col>
-                <i-col span="2" offset="8">
+                <i-col span="3" offset="7">
                    
-                        <i-button type="text" size="large" @click="modal_login = true">登陆/注册</i-button>
-                        
+                        <i-button type="primary" @click="modal_login = true">登陆</i-button>
+                        <i-button type="primary" @click="modal_login = true">注册</i-button>
+                  
                    
                 </i-col>
                         
@@ -114,8 +115,7 @@
                         { required: true, message: '用户名不能为空', trigger: 'blur' }
                     ],
                     mail: [
-                        { required: true, message: '密码不能为空', trigger: 'blur' },
-                        { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+                        { required: true, message: '密码不能为空', trigger: 'blur' }
                     ],
                     city: [
                         { required: true, message: '请选择城市', trigger: 'change' }
