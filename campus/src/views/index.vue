@@ -55,7 +55,7 @@
                 <i-col span="3" offset="7">
                    
                         <i-button type="primary" @click="modal_login = true">登陆</i-button>
-                        <i-button type="primary" @click="modal_login = true">注册</i-button>
+                        <i-button type="primary" @click="modal_register = true">注册</i-button>
                   
                    
                 </i-col>
@@ -75,70 +75,103 @@
                 <span>登陆</span>
             </p>
             <div style="text-align:left">
-                <i-form v-ref:form-validate :model="formValidate" :rules="ruleValidate" :label-width="80">
+                <i-form v-ref:login-validate :model="loginValidate" :rules="ruleValidate" :label-width="80">
                     <Form-item label="姓名" prop="name">
-                        <i-input :value.sync="formValidate.name" placeholder="请输入用户名/邮箱"></i-input>
+                        <i-input :value.sync="loginValidate.name" placeholder="请输入用户名/邮箱"></i-input>
                     </Form-item>
-                    <Form-item label="邮箱" prop="mail">
-                        <i-input :value.sync="formValidate.mail" placeholder="请输入密码"></i-input>
+                    <Form-item label="密码" prop="password">
+                        <i-input type="password" :value.sync="loginValidate.password" placeholder="请输入密码"></i-input>
 
                     </Form-item>
-                    <Form-item prop="mail">
-                            <Checkbox-group :model.sync="formItem.checkbox">
-                            <Checkbox>记住登陆</Checkbox>
+                    <Form-item>
+                            <Checkbox-group>
+                            <Checkbox :value.sync="loginValidate.auto">记住登陆</Checkbox>
                         </Checkbox-group>
                     </Form-item>
                 </i-form>
             </div>
             <div slot="footer">
-                <i-button type="success" size="large" long :loading="modal_loading">登陆</i-button>
+                <i-button type="success" @click="handleSubmit('loginValidate')" size="large" long :loading="modal_loading">登陆</i-button>
             </div>
         </Modal>
+
+
+        <Modal :visible.sync="modal_register" :mask-closable="false" width="360">
+            <p slot="header" style="color:#0c6;text-align:center">
+                <Icon type="information-circled"></Icon>
+                <span>注册</span>
+            </p>
+            <div style="text-align:left">
+                <i-form v-ref:register-validate :model="registerValidate" :rules="ruleValidate" :label-width="80">
+                    <Form-item label="邮箱" prop="mail">
+                        <i-input :value.sync="registerValidate.mail" placeholder="请输入邮箱"></i-input>
+                    </Form-item>
+                    <Form-item label="密码" prop="password">
+                        <i-input type="password" :value.sync="registerValidate.password" placeholder="请输入密码"></i-input>
+
+                    </Form-item>
+                    <Form-item label="重复密码" prop="repeatPassword">
+                        <i-input type="password" :value.sync="registerValidate.repeatPassword" placeholder="再次输入密码"></i-input>
+
+                    </Form-item>                    
+                </i-form>
+            </div>
+            <div slot="footer">
+                <i-button type="success" @click="handleSubmit('registerValidate')" size="large" long :loading="modal_loading">注册</i-button>
+            </div>
+        </Modal>        
 </template>
 <script>
     export default {
         data () {
             return {
                 modal_login: false,
-                formValidate: {
+                modal_register: false,
+                loginValidate: {
                     name: '',
+                    password: '',
                     mail: '',
-                    city: '',
-                    gender: '',
-                    interest: [],
-                    date: '',
-                    time: '',
-                    desc: ''
+                    auto: false
                 },
+                 registerValidate: {
+                    password: '',
+                    repeatPassword:'',
+                    mail: '',
+                }, 
                   ruleValidate: {
                     name: [
                         { required: true, message: '用户名不能为空', trigger: 'blur' }
                     ],
+                    password: [
+                        { required: true, message: '密码不能为空', trigger: 'blur' },
+                        { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
+                    ],
+                    repeatPassword: [
+                        { required: true, message: '密码不能为空', trigger: 'blur' },
+                        { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
+                    ],
                     mail: [
-                        { required: true, message: '密码不能为空', trigger: 'blur' }
-                    ],
-                    city: [
-                        { required: true, message: '请选择城市', trigger: 'change' }
-                    ],
-                    gender: [
-                        { required: true, message: '请选择性别', trigger: 'change' }
-                    ],
-                    interest: [
-                        { required: true, type: 'array', min: 1, message: '至少选择一个爱好', trigger: 'change' },
-                        { type: 'array', max: 2, message: '最多选择两个爱好', trigger: 'change' }
-                    ],
-                    date: [
-                        { required: true, type: 'date', message: '请选择日期', trigger: 'change' }
-                    ],
-                    time: [
-                        { required: true, type: 'date', message: '请选择时间', trigger: 'change' }
-                    ],
-                    desc: [
-                        { required: true, message: '请输入个人介绍', trigger: 'blur' },
-                        { type: 'string', min: 20, message: '介绍不能少于20字', trigger: 'blur' }
+                        { required: true, message: '邮箱不能为空', trigger: 'blur' },
+                        { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
                     ]
                 }
+             
             }
-        }
+        },
+        methods: {
+            handleSubmit (name) {
+                 this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$Message.success('提交成功!');
+                        console.log( this.data)
+                    } else {
+                        this.$Message.error('表单验证失败!');
+                    }
+                })
+            },
+            handleReset (name) {
+                this.$refs[name].resetFields();
+            }
+        }       
     }
 </script>
