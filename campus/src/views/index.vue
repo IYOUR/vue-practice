@@ -193,8 +193,8 @@
                             })
                             .then(function (response) {
                                 if(response.errcode){
-                                    this.$Message.success('注册成功!');
-                                    //this.$router.go('/home');
+                                    this.$Message.success('注册成功,请登陆!');
+                                    this.$router.go('/login');
                                 }
                             })
                             .catch(function (error) {
