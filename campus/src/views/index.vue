@@ -163,7 +163,37 @@
                  this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('提交成功!');
-                        console.log( this.data)
+                        if(name === "loginValidate"){
+                            this.$http.post('/user', {
+                                'user.name': this.loginValidate.name,
+                                'user.password': this.loginValidate.name
+                            })
+                            .then(function (response) {
+                                if(response.errcode === 1){
+                                    this.$Message.success('登陆成功!');
+                                    this.$router.go('/home');
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                        else if(name === "registerValidate"){
+                             this.$http.post('/user', {
+                                'user.name': this.registerValidate.mail,
+                                'user.password': this.registerValidate.password
+                            })
+                            .then(function (response) {
+                                if(response.errcode === 1){
+                                    this.$Message.success('注册成功!');
+                                    //this.$router.go('/home');
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });                           
+                        }
+
                     } else {
                         this.$Message.error('表单验证失败!');
                     }

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import axios from 'axios';
 import App from 'components/app.vue';
 import Routers from './router';
 import iView from 'iview';
@@ -9,6 +10,7 @@ import Locales from './locale';
 import zhLocale from 'iview/src/locale/lang/zh-CN';
 import enLocale from 'iview/src/locale/lang/en-US';
 
+Vue.prototype.$http = axios;
 Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(VueI18n);
