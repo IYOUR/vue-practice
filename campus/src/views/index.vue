@@ -182,6 +182,10 @@
                             });
                         }
                         else if(name === "registerValidate"){
+                            if(this.registerValidate.password !== this.registerValidate.repeatPassword){
+                                this.$Message.error('两次密码输入不一致!');
+                                return false;
+                            }
                              this.$http.post('/user/registUser.go', {
                                 'username': this.registerValidate.name,
                                 'eMail': this.registerValidate.mail,
