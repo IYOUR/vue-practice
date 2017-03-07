@@ -164,7 +164,7 @@
                     if (valid) {
                         this.$Message.success('提交成功!');
                         if(name === "loginValidate"){
-                            this.$http.post('/user', {
+                            this.$http.post('/user/loginUser.go', {
                                 'user.name': this.loginValidate.name,
                                 'user.password': this.loginValidate.name
                             })
@@ -179,9 +179,10 @@
                             });
                         }
                         else if(name === "registerValidate"){
-                             this.$http.post('/user', {
-                                'user.name': this.registerValidate.mail,
-                                'user.password': this.registerValidate.password
+                             this.$http.post('/user/registUser.go', {
+                                'username': this.registerValidate.name,
+                                'eMail': this.registerValidate.mail,
+                                'password': this.registerValidate.password
                             })
                             .then(function (response) {
                                 if(response.errcode === 1){
