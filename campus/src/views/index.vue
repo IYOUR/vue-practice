@@ -103,6 +103,9 @@
             </p>
             <div style="text-align:left">
                 <i-form v-ref:register-validate :model="registerValidate" :rules="ruleValidate" :label-width="80">
+                    <Form-item label="用户名" prop="name">
+                        <i-input :value.sync="registerValidate.name" placeholder="请输入用户名"></i-input>
+                    </Form-item>
                     <Form-item label="邮箱" prop="mail">
                         <i-input :value.sync="registerValidate.mail" placeholder="请输入邮箱"></i-input>
                     </Form-item>
