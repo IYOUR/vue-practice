@@ -168,11 +168,11 @@
                         this.$Message.success('提交成功!');
                         if(name === "loginValidate"){
                             this.$http.post('/user/loginUser.go', {
-                                'user.name': this.loginValidate.name,
-                                'user.password': this.loginValidate.name
+                                'username': this.loginValidate.name,
+                                'password': this.loginValidate.name
                             })
                             .then(function (response) {
-                                if(response.errcode === 1){
+                                if(response.errcode){
                                     this.$Message.success('登陆成功!');
                                     this.$router.go('/home');
                                 }
@@ -188,7 +188,7 @@
                                 'password': this.registerValidate.password
                             })
                             .then(function (response) {
-                                if(response.errcode === 1){
+                                if(response.errcode){
                                     this.$Message.success('注册成功!');
                                     //this.$router.go('/home');
                                 }
