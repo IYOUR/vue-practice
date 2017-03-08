@@ -169,7 +169,7 @@
                         if(name === "loginValidate"){
                             this.$http.post('/user/loginUser.go', {
                                 'username': this.loginValidate.name,
-                                'password': this.loginValidate.name
+                                'password': this.loginValidate.password
                             })
                             .then(function (response) {
                                 if(response.errcode){
@@ -194,7 +194,9 @@
                             .then(function (response) {
                                 if(response.errcode){
                                     this.$Message.success('注册成功,请登陆!');
-                                    this.$router.go('/login');
+                                    this.modal_register = false;
+                                    this.modal_register = true;
+
                                 }
                             })
                             .catch(function (error) {
