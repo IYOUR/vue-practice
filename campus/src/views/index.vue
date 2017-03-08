@@ -172,7 +172,8 @@
                                 'password': this.loginValidate.password
                             })
                             .then(function (response) {
-                                if(response.errcode){
+                                console.log(response)
+                                if(response.errcode == false){
                                     this.$Message.success('登陆成功!');
                                     this.$router.go('/home');
                                 }
@@ -192,7 +193,8 @@
                                 'password': this.registerValidate.password
                             })
                             .then(function (response) {
-                                if(response.errcode){
+                                console.log(response)
+                                if(response.errcode == false){
                                     this.$Message.success('注册成功,请登陆!');
                                     this.modal_register = false;
                                     this.modal_register = true;
