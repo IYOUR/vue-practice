@@ -91,7 +91,7 @@
                 </i-form>
             </div>
             <div slot="footer">
-                <i-button type="success" @click="handleSubmit('loginValidate')" size="large" long :loading="modal_loading">登陆</i-button>
+                <i-button type="success" @click="handleSubmit('loginValidate')" size="large" long :loading="login.loading">登陆</i-button>
             </div>
         </Modal>
 
@@ -120,7 +120,7 @@
                 </i-form>
             </div>
             <div slot="footer">
-                <i-button type="success" @click="handleSubmit('registerValidate')" size="large" long :loading="modal_loading">注册</i-button>
+                <i-button type="success" @click="handleSubmit('registerValidate')" size="large" long :loading="LoginButton.loading">{{LoginButton.text}}</i-button>
             </div>
         </Modal>        
 </template>
@@ -141,6 +141,10 @@
                     repeatPassword:'',
                     mail: '',
                 }, 
+                LoginButton: {
+				text: '登录',
+				loading: false
+			    },
                   ruleValidate: {
                     name: [
                         { required: true, message: '用户名不能为空', trigger: 'blur' }
@@ -187,6 +191,8 @@
                                 this.$Message.error('两次密码输入不一致!');
                                 return false;
                             }
+                            this.LoginButton.text = "登陆中";
+                            this.LoginButton.loading = true;
                              this.$http.post('/user/registUser.go', {
                                 'username': this.registerValidate.name,
                                 'eMail': this.registerValidate.mail,
