@@ -114,7 +114,7 @@
                     </Form-item>
                     <Form-item label="邮箱" prop="mail">
                         <i-input :value.sync="registerValidate.mail" placeholder="请输入邮箱">
-                            <Icon type="ios-person-outline" slot="prepend"></Icon>
+                            <Icon type="ios-email-outline" slot="prepend"></Icon>
                         </i-input>
                     </Form-item>
                     <Form-item label="密码" prop="password">
