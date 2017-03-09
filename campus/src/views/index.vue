@@ -166,23 +166,20 @@
                  this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('提交成功!');
+                        
                         if(name === "loginValidate"){
                             this.$http.post('/user/loginUser.go', {
                                 'username': this.loginValidate.name,
                                 'password': this.loginValidate.password
-                            })
-                            .then(function (response) {
-                                console.log(response)
-                                if(response.errcode == false){
-                                    this.$Message.success('登陆成功!');
-                                    this.$router.go('/home');
-                                }
-                            })
-                            .catch(function (error) {
+                            }).then((response) => {
+                                   errcode=  response.data.errcode;  
+                            },(error) => {
                                 console.log(error);
+                                this.$Message.success('提交!');
                             });
+
                         }
-                        else if(name === "registerValidate"){
+                        if(name === "registerValidate"){
                             if(this.registerValidate.password !== this.registerValidate.repeatPassword){
                                 this.$Message.error('两次密码输入不一致!');
                                 return false;
