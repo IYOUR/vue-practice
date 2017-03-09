@@ -154,10 +154,10 @@
                     mail: '',
                 }, 
                 LoginButton: {
-				text: '登录',
-				loading: false
+                    text: '登录',
+                    loading: false
 			    },
-                  ruleValidate: {
+                ruleValidate: {
                     name: [
                         { required: true, message: '用户名不能为空', trigger: 'blur' }
                     ],
