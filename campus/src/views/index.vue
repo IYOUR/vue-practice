@@ -77,10 +77,14 @@
             <div style="text-align:left">
                 <i-form v-ref:login-validate :model="loginValidate" :rules="ruleValidate" :label-width="80">
                     <Form-item label="姓名" prop="name">
-                        <i-input :value.sync="loginValidate.name" placeholder="请输入用户名/邮箱"></i-input>
+                        <i-input :value.sync="loginValidate.name" placeholder="请输入用户名/邮箱">
+                             <Icon type="ios-person-outline" slot="prepend"></Icon>
+                        </i-input>
                     </Form-item>
                     <Form-item label="密码" prop="password">
-                        <i-input type="password" :value.sync="loginValidate.password" placeholder="请输入密码"></i-input>
+                        <i-input type="password" :value.sync="loginValidate.password" placeholder="请输入密码">
+                             <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                        </i-input>
 
                     </Form-item>
                     <Form-item>
@@ -104,17 +108,25 @@
             <div style="text-align:left">
                 <i-form v-ref:register-validate :model="registerValidate" :rules="ruleValidate" :label-width="80">
                     <Form-item label="用户名" prop="name">
-                        <i-input :value.sync="registerValidate.name" placeholder="请输入用户名"></i-input>
+                        <i-input :value.sync="registerValidate.name" placeholder="请输入用户名">
+                            <Icon type="ios-person-outline" slot="prepend"></Icon>
+                        </i-input>
                     </Form-item>
                     <Form-item label="邮箱" prop="mail">
-                        <i-input :value.sync="registerValidate.mail" placeholder="请输入邮箱"></i-input>
+                        <i-input :value.sync="registerValidate.mail" placeholder="请输入邮箱">
+                            <Icon type="ios-person-outline" slot="prepend"></Icon>
+                        </i-input>
                     </Form-item>
                     <Form-item label="密码" prop="password">
-                        <i-input type="password" :value.sync="registerValidate.password" placeholder="请输入密码"></i-input>
+                        <i-input type="password" :value.sync="registerValidate.password" placeholder="请输入密码">
+                            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                        </i-input>
 
                     </Form-item>
-                    <Form-item label="重复密码" prop="repeatPassword">
-                        <i-input type="password" :value.sync="registerValidate.repeatPassword" placeholder="再次输入密码"></i-input>
+                    <Form-item label="重复密码" prop="password_confirmation">
+                        <i-input type="password" :value.sync="registerValidate.password_confirmation" placeholder="再次输入密码">
+                            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                        </i-input>
 
                     </Form-item>                    
                 </i-form>
@@ -138,7 +150,7 @@
                 },
                  registerValidate: {
                     password: '',
-                    repeatPassword:'',
+                    password_confirmation:'',
                     mail: '',
                 }, 
                 LoginButton: {
@@ -153,10 +165,17 @@
                         { required: true, message: '密码不能为空', trigger: 'blur' },
                         { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
                     ],
-                    repeatPassword: [
-                        { required: true, message: '密码不能为空', trigger: 'blur' },
-                        { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
-                    ],
+                    password_confirmation: [    
+                        {validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('请输入密码'));
+                            }
+                            if (value !== this.registerValidate.password) {
+                                return callback(new Error('两次输入密码不一致'));
+                            }
+                            return callback();
+                        }, trigger: 'blur'}
+				    ],
                     mail: [
                         { required: true, message: '邮箱不能为空', trigger: 'blur' },
                         { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
@@ -168,8 +187,7 @@
         methods: {
             handleSubmit (name) {
                  this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.$Message.success('提交成功!');                        
+                    if (valid) {                     
                         if(name === "loginValidate"){
                             this.$http.post('/user/loginUser.go', {
                                 'username': this.loginValidate.name,
@@ -186,11 +204,6 @@
 
                         }
                         if(name === "registerValidate"){
-                            if(this.registerValidate.password !== this.registerValidate.repeatPassword){
-                                this.$Message.destroy();
-                                this.$Message.error('两次密码输入不一致!');
-                                return false;
-                            }
                             this.LoginButton.text = "登陆中";
                             this.LoginButton.loading = true;
                              this.$http.post('/user/registUser.go', {
@@ -200,6 +213,11 @@
                             }).then((response) => {
                                 console.log(response)
                                 if(response.data.errcode == false){
+                                   this.$store.commit('setAccessToken', response.body.access_token);
+                		           this.$store.commit('login');
+                                   localStorage.access_token = this.$store.state.access_token;
+
+
                                     this.$Message.destroy();
                                     this.$Message.success('注册成功,请登陆!');
                                     this.modal_register = false;
