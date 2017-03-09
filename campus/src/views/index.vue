@@ -172,7 +172,8 @@
                                 'password': this.loginValidate.password
                             }).then((response) => {
                                 if(response.data.errcode == false){
-                                    this.$Message.success('注册成功,请登陆!');
+                                    this.$Message.destroy();
+                                    this.$Message.success('登陆成功!');
                                     this.$router.go('/home');
                                 } 
                             },(error) => {
@@ -182,6 +183,7 @@
                         }
                         if(name === "registerValidate"){
                             if(this.registerValidate.password !== this.registerValidate.repeatPassword){
+                                this.$Message.destroy();
                                 this.$Message.error('两次密码输入不一致!');
                                 return false;
                             }
@@ -192,10 +194,10 @@
                             }).then((response) => {
                                 console.log(response)
                                 if(response.data.errcode == false){
+                                    this.$Message.destroy();
                                     this.$Message.success('注册成功,请登陆!');
                                     this.modal_register = false;
-                                    this.modal_register = true;
-
+                                    this.modal_login = true;
                                 }
                             },(error) => {
                                 console.log(error);

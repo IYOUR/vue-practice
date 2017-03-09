@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex'
 import VueRouter from 'vue-router';
 import axios from 'axios';
 import App from 'components/app.vue';
@@ -14,6 +15,7 @@ Vue.prototype.$http = axios;
 Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(VueI18n);
+Vue.use(Vuex);
 
 // 开启debug模式
 Vue.config.debug = true;
@@ -31,6 +33,31 @@ const mergeEN = Object.assign(enLocale, locales['en-US']);
 Vue.locale('zh-CN', mergeZH);
 Vue.locale('en-US', mergeEN);
 
+// Vuex定义
+const store = new Vuex.Store({
+	state: {
+		isLogin: false,
+		user: {},
+		access_token: ''
+	},
+	mutations: {
+		setAccessToken(state, access_token) {
+			state.access_token = access_token;
+		},
+		login(state) {
+			state.isLogin = true;
+		},
+		logout(state) {
+			state.isLogin = false;
+			state.user = {};
+			state.access_token = '';
+		},
+		setUser(state, user) {
+			state.user = user;
+		}
+	}
+});
+
 // 路由配置
 let router = new VueRouter({
     // 是否开启History模式的路由, 如果生产环境的服务端没有进行相关配置,请慎用
@@ -39,8 +66,31 @@ let router = new VueRouter({
 
 router.map(Routers);
 
-router.beforeEach(() => {
+router.beforeEach(({to, next, redirect}) => {
     window.scrollTo(0, 0);
+    // Auth验证
+    if (to.auth) {
+    	if (!store.state.isLogin) {
+    		if (localStorage.access_token) {
+    			// 自动登录
+    			store.commit('setAccessToken', localStorage.access_token);
+    			store.commit('login');
+    			// 获取用户信息
+    			Vue.http.get(server.api.user, {
+    				headers: {
+    					'Authorization': 'Bearer ' + store.state.access_token
+    				}
+    			}).then((response) => {
+    				store.commit('setUser', response.body.data);
+    			}, (error) => {
+    				redirect({name: 'login'});
+    			});
+    			return true;
+    		}
+    		redirect({name: 'login'});
+    	}
+    }
+    return true; 
 });
 
 router.afterEach(() => {
