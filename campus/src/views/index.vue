@@ -165,17 +165,18 @@
             handleSubmit (name) {
                  this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('提交成功!');
-                        
+                        this.$Message.success('提交成功!');                        
                         if(name === "loginValidate"){
                             this.$http.post('/user/loginUser.go', {
                                 'username': this.loginValidate.name,
                                 'password': this.loginValidate.password
                             }).then((response) => {
-                                   errcode=  response.data.errcode;  
+                                if(response.data.errcode == false){
+                                    this.$Message.success('注册成功,请登陆!');
+                                    this.$router.go('/home');
+                                } 
                             },(error) => {
                                 console.log(error);
-                                this.$Message.success('提交!');
                             });
 
                         }
@@ -188,17 +189,15 @@
                                 'username': this.registerValidate.name,
                                 'eMail': this.registerValidate.mail,
                                 'password': this.registerValidate.password
-                            })
-                            .then(function (response) {
+                            }).then((response) => {
                                 console.log(response)
-                                if(response.errcode == false){
+                                if(response.data.errcode == false){
                                     this.$Message.success('注册成功,请登陆!');
                                     this.modal_register = false;
                                     this.modal_register = true;
 
                                 }
-                            })
-                            .catch(function (error) {
+                            },(error) => {
                                 console.log(error);
                             });                           
                         }
