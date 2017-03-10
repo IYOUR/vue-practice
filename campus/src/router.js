@@ -11,7 +11,7 @@ const routers = {
         component(resolve) {
             require(['./views/home.vue'], resolve);
         },
-        auth: false
+        auth: true
     }    
 };
 export default routers;

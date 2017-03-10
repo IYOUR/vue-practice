@@ -12,6 +12,7 @@ import zhLocale from 'iview/src/locale/lang/zh-CN';
 import enLocale from 'iview/src/locale/lang/en-US';
 
 Vue.prototype.$http = axios;
+Vue.prototype.$store = Vuex;
 Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(VueI18n);
@@ -76,18 +77,18 @@ router.beforeEach(({to, next, redirect}) => {
     			store.commit('setAccessToken', localStorage.access_token);
     			store.commit('login');
     			// 获取用户信息
-    			Vue.http.get(server.api.user, {
+    			Vue.$http.post('/user/loginUser.go', {
     				headers: {
     					'Authorization': 'Bearer ' + store.state.access_token
     				}
     			}).then((response) => {
     				store.commit('setUser', response.body.data);
     			}, (error) => {
-    				redirect({name: 'login'});
+    				redirect({name: 'index'});
     			});
     			return true;
     		}
-    		redirect({name: 'login'});
+    		redirect({name: 'index'});
     	}
     }
     return true; 
@@ -100,4 +101,5 @@ router.afterEach(() => {
 router.redirect({
     '*': "/index"
 });
+App.store = store;
 router.start(App, '#app');

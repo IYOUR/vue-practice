@@ -95,7 +95,7 @@
                 </i-form>
             </div>
             <div slot="footer">
-                <i-button type="success" @click="handleSubmit('loginValidate')" size="large" long :loading="login.loading">登陆</i-button>
+                <i-button type="success" @click="handleSubmit('loginValidate')" size="large" long :loading="loginButton.loading">{{loginButton.text}}</i-button>
             </div>
         </Modal>
 
@@ -132,11 +132,12 @@
                 </i-form>
             </div>
             <div slot="footer">
-                <i-button type="success" @click="handleSubmit('registerValidate')" size="large" long :loading="LoginButton.loading">{{LoginButton.text}}</i-button>
+                <i-button type="success" @click="handleSubmit('registerValidate')" size="large" long :loading="registerButton.loading">{{registerButton.text}}</i-button>
             </div>
         </Modal>        
 </template>
 <script>
+
     export default {
         data () {
             return {
@@ -153,8 +154,12 @@
                     password_confirmation:'',
                     mail: '',
                 }, 
-                LoginButton: {
+                loginButton: {
                     text: '登录',
+                    loading: false
+			    },
+                registerButton: {
+                    text: '注册',
                     loading: false
 			    },
                 ruleValidate: {
@@ -189,23 +194,31 @@
                  this.$refs[name].validate((valid) => {
                     if (valid) {                     
                         if(name === "loginValidate"){
+                            this.loginButton.text = "登陆中";
+                            this.loginButton.loading = true;
                             this.$http.post('/user/loginUser.go', {
                                 'username': this.loginValidate.name,
                                 'password': this.loginValidate.password
                             }).then((response) => {
                                 if(response.data.errcode == false){
+                                    this.$store.commit('setAccessToken', response.data.info);
+                                    this.$store.commit('login');
+                                    localStorage.access_token = this.$store.state.access_token;
+
                                     this.$Message.destroy();
                                     this.$Message.success('登陆成功!');
-                                    this.$router.go('/home');
+                                    //this.$router.go('/home');
+                                    this.$router.redirect({name: 'home'});
                                 } 
                             },(error) => {
+                                localStorage.access_token = {'username': this.loginValidate.name,'password': this.loginValidate.password};
                                 console.log(error);
                             });
 
                         }
                         if(name === "registerValidate"){
-                            this.LoginButton.text = "登陆中";
-                            this.LoginButton.loading = true;
+                            this.registerButton.text = "注册中";
+                            this.registerButton.loading = true;
                              this.$http.post('/user/registUser.go', {
                                 'username': this.registerValidate.name,
                                 'eMail': this.registerValidate.mail,
@@ -213,7 +226,7 @@
                             }).then((response) => {
                                 console.log(response)
                                 if(response.data.errcode == false){
-                                   this.$store.commit('setAccessToken', response.body.access_token);
+                                   this.$store.commit('setAccessToken', response.data.info);
                 		           this.$store.commit('login');
                                    localStorage.access_token = this.$store.state.access_token;
 
