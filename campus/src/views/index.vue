@@ -203,7 +203,7 @@
                                 if(response.data.errcode == false){
                                     this.$store.commit('setAccessToken', response.data.info);
                                     this.$store.commit('login');
-                                    localStorage.access_token = this.$store.state.access_token;
+                                    localStorage.access_token = JSON.stringify({'username': this.loginValidate.name,'password': this.loginValidate.password});
 
                                     this.$Message.destroy();
                                     this.$Message.success('登陆成功!');
@@ -211,7 +211,6 @@
                                     this.$router.redirect({name: 'home'});
                                 } 
                             },(error) => {
-                                localStorage.access_token = {'username': this.loginValidate.name,'password': this.loginValidate.password};
                                 console.log(error);
                             });
 
