@@ -201,7 +201,6 @@
                                 'password': this.loginValidate.password
                             }).then((response) => {
                                 if(response.data.errcode == false){
-                                    this.$store.commit('setAccessToken', response.data.info);
                                     this.$store.commit('login');
                                     localStorage.access_token = JSON.stringify({'username': this.loginValidate.name,'password': this.loginValidate.password});
 

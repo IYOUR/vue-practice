@@ -74,12 +74,19 @@ router.beforeEach(({to, next, redirect}) => {
     	if (!store.state.isLogin) {
     		if (localStorage.access_token) {
     			// 自动登录
-    			store.commit('setAccessToken', localStorage.access_token);
     			store.commit('login');
     			// 获取用户信息
     			Vue.$http.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
     			).then((response) => {
-    				store.commit('setUser', response.body.data);
+    				if(response.data.errcode == false){
+						Vue.$http.get('/user/getUserInfo.go'
+						).then((response) => {
+							console.log(response);
+							//store.commit('setUser', response.body.data);
+						}, (error) => {
+							redirect({name: 'login'});
+						});
+					}
     			}, (error) => {
     				redirect({name: 'index'});
     			});
