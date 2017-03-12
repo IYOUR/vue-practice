@@ -1,16 +1,17 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
-
-import Hello from 'components/Hello'
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    }
-
-  ]
-})
+const routers = {
+  '/index': {
+    name: 'index',
+    component (resolve) {
+      require(['../components/index.vue'], resolve)
+    },
+    auth: false
+  },
+  '/home': {
+    name: 'home',
+    component (resolve) {
+      require(['../components/home.vue'], resolve)
+    },
+    auth: true
+  }
+}
+export default routers
