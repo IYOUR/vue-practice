@@ -206,8 +206,8 @@
 
                                     this.$Message.destroy();
                                     this.$Message.success('登陆成功!');
-                                    //this.$router.go('/home');
-                                    this.$router.redirect({name: 'home'});
+                                    this.$router.go('/home');
+                                    //this.$router.redirect({name: 'home'});
                                 } 
                             },(error) => {
                                 console.log(error);
