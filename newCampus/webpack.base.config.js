@@ -5,7 +5,7 @@ module.exports = {
     // 入口
     entry: {
         main: './src/main',
-        vendors: ['vue', 'vue-router', 'axios', 'echarts', 'js-cookie', 'html2canvas']
+        vendors: ['vue', 'vue-router', 'axios', 'vuex', 'echarts', 'js-cookie']
     },
     // 输出
     output: {
@@ -36,7 +36,7 @@ module.exports = {
             },
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: 'url-loader?limit=50000&name=fonts/[name].[hash].[ext]'
+                loader: 'url-loader?limit=8192'
             },
             {
                 test: /\.(html|tpl)$/,

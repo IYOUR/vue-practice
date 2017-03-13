@@ -5,37 +5,35 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const fs = require('fs');
 
-config.output.publicPath = path.join('./'); // 资源路径,根据需要可改为cdn地址
-config.output.filename = 'js/[name].[hash].js'; // 带hash值的入口js名称
-config.output.chunkFilename = 'js/[name].[hash].chunk.js'; // 带hash值的路由js名称
+config.output.publicPath = path.join('./dist/'); // 资源路径,根据需要可改为cdn地址
+config.output.filename = '[name].[hash].js'; // 带hash值的入口js名称
+config.output.chunkFilename = '[name].[hash].chunk.js'; // 带hash值的路由js名称
 
 config.vue = {
     loaders: {
         css: ExtractTextPlugin.extract(
             "style-loader",
             "css-loader", {
-                publicPath: "../dist/js/"
+                publicPath: "../dist/"
                 // 特别提醒,如果这里的publicPath是以http://xxx.xxx这样以http://开头的,要写成
                 // publicPath: "http:\\xxx.xxx",否则会编译为"http:/xxx.xxx"
             }
         ),
         less: ExtractTextPlugin.extract(
             'vue-style-loader',
-            'css-loader!less-loader', {
-                publicPath: "../dist/css/"
-            }
+            'css-loader!less-loader'
         )
     }
 };
 
 config.plugins = (config.plugins || []).concat([
     // 提取带hash值的css名称
-    new ExtractTextPlugin("css/[name].[hash].css", {
+    new ExtractTextPlugin("[name].[hash].css", {
         allChunks: true,
         resolve: ['modules']
     }),
     // 提取带hash值的第三方库名称
-    new webpack.optimize.CommonsChunkPlugin('vendors', 'js/vendors.[hash].js'),
+    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[hash].js'),
     new webpack.DefinePlugin({
         'process.env': {
             NODE_ENV: '"production"'
@@ -49,7 +47,7 @@ config.plugins = (config.plugins || []).concat([
     }),
     // 构建html文件
     new HtmlWebpackPlugin({
-        filename: '/index.html',
+        filename: '../index_prod.html',
         template: './src/template/index.ejs',
         inject: false
     })

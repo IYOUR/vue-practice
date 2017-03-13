@@ -64,13 +64,6 @@
                 </Menu-item>
             </div>
         </Menu>
-        <Menu mode="horizontal" active-key="1">
-            <div class="layout-assistant">
-                <Menu-item key="1">二级导航</Menu-item>
-                <Menu-item key="2">二级导航</Menu-item>
-                <Menu-item key="3">二级导航</Menu-item>
-            </div>
-        </Menu>
         <div class="layout-content">
             <Row>
                 <i-col span="5">
