@@ -137,116 +137,110 @@
         </Modal>        
 </template>
 <script>
-
-    export default {
-        data () {
-            return {
-                modal_login: false,
-                modal_register: false,
-                loginValidate: {
-                    name: '',
-                    password: '',
-                    mail: '',
-                    auto: false
-                },
-                 registerValidate: {
-                    password: '',
-                    password_confirmation:'',
-                    mail: '',
-                }, 
-                loginButton: {
-                    text: '登录',
-                    loading: false
-			    },
-                registerButton: {
-                    text: '注册',
-                    loading: false
-			    },
-                ruleValidate: {
-                    name: [
-                        { required: true, message: '用户名不能为空', trigger: 'blur' }
-                    ],
-                    password: [
-                        { required: true, message: '密码不能为空', trigger: 'blur' },
-                        { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
-                    ],
-                    password_confirmation: [    
-                        {validator: (rule, value, callback) => {
-                            if (!value) {
-                                return callback(new Error('请输入密码'));
-                            }
-                            if (value !== this.registerValidate.password) {
-                                return callback(new Error('两次输入密码不一致'));
-                            }
-                            return callback();
-                        }, trigger: 'blur'}
-				    ],
-                    mail: [
-                        { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                        { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-                    ]
-                }
-             
+export default {
+  data () {
+    return {
+      modal_login: false,
+      modal_register: false,
+      loginValidate: {
+        name: '',
+        password: '',
+        mail: '',
+        auto: false
+      },
+      registerValidate: {
+        password: '',
+        password_confirmation: '',
+        mail: ''
+      },
+      loginButton: {
+        text: '登录',
+        loading: false
+      },
+      registerButton: {
+        text: '注册',
+        loading: false
+      },
+      ruleValidate: {
+        name: [
+            { required: true, message: '用户名不能为空', trigger: 'blur' }
+        ],
+        password: [
+            { required: true, message: '密码不能为空', trigger: 'blur' },
+            { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
+        ],
+        password_confirmation: [
+          {validator: (rule, value, callback) => {
+            if (!value) {
+              return callback(new Error('请输入密码'))
             }
-        },
-        methods: {
-            handleSubmit (name) {
-                 this.$refs[name].validate((valid) => {
-                    if (valid) {                     
-                        if(name === "loginValidate"){
-                            this.loginButton.text = "登陆中";
-                            this.loginButton.loading = true;
-                            this.$http.post('/user/loginUser.go', {
-                                'username': this.loginValidate.name,
-                                'password': this.loginValidate.password
-                            }).then((response) => {
-                                if(response.data.errcode == false){
-                                    this.$store.commit('login');
-                                    localStorage.access_token = JSON.stringify({'username': this.loginValidate.name,'password': this.loginValidate.password});
-
-                                    this.$Message.destroy();
-                                    this.$Message.success('登陆成功!');
-                                    this.$router.go('/home');
-                                    //this.$router.redirect({name: 'home'});
-                                } 
-                            },(error) => {
-                                console.log(error);
-                            });
-
-                        }
-                        if(name === "registerValidate"){
-                            this.registerButton.text = "注册中";
-                            this.registerButton.loading = true;
-                             this.$http.post('/user/registUser.go', {
-                                'username': this.registerValidate.name,
-                                'eMail': this.registerValidate.mail,
-                                'password': this.registerValidate.password
-                            }).then((response) => {
-                                console.log(response)
-                                if(response.data.errcode == false){
-                                   this.$store.commit('setAccessToken', response.data.info);
-                		           this.$store.commit('login');
-                                   localStorage.access_token = this.$store.state.access_token;
-
-
-                                    this.$Message.destroy();
-                                    this.$Message.success('注册成功,请登陆!');
-                                    this.modal_register = false;
-                                    this.modal_login = true;
-                                }
-                            },(error) => {
-                                console.log(error);
-                            });                           
-                        }
-
-                    } else {
-                        this.$Message.error('表单验证失败!');
-                    }
-                })
-            },
-            handleReset (name) {
-                this.$refs[name].resetFields();
+            if (value !== this.registerValidate.password) {
+              return callback(new Error('两次输入密码不一致'))
             }
-        }       
+            return callback()
+          },
+            trigger: 'blur'}
+        ],
+        mail: [
+              { required: true, message: '邮箱不能为空', trigger: 'blur' },
+              { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+        ]
+      }
     }
+  },
+  methods: {
+    handleSubmit (name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          if (name === 'loginValidate') {
+            this.loginButton.text = '登陆中'
+            this.loginButton.loading = true
+            this.$http.post('/user/loginUser.go', {
+              'username': this.loginValidate.name,
+              'password': this.loginValidate.password
+            }).then((response) => {
+              if (response.data.errcode === false) {
+                this.$store.commit('login')
+                localStorage.access_token = JSON.stringify({'username': this.loginValidate.name, 'password': this.loginValidate.password})
+                this.$Message.destroy()
+                this.$Message.success('登陆成功!')
+                this.$router.go('/home')
+                // this.$router.redirect({name: 'home'})
+              }
+            }, (error) => {
+              console.log(error)
+            })
+          }
+          if (name === 'registerValidate') {
+            this.registerButton.text = '注册中'
+            this.registerButton.loading = true
+            this.$http.post('/user/registUser.go', {
+              'username': this.registerValidate.name,
+              'eMail': this.registerValidate.mail,
+              'password': this.registerValidate.password
+            }).then((response) => {
+              console.log(response)
+              if (response.data.errcode === false) {
+                this.$store.commit('setAccessToken', response.data.info)
+                this.$store.commit('login')
+                localStorage.access_token = this.$store.state.access_token
+                this.$Message.destroy()
+                this.$Message.success('注册成功,请登陆!')
+                this.modal_register = false
+                this.modal_login = true
+              }
+            }, (error) => {
+              console.log(error)
+            })
+          }
+        } else {
+          this.$Message.error('表单验证失败!')
+        }
+      })
+    },
+    handleReset (name) {
+      this.$refs[name].resetFields()
+    }
+  }
+}
 </script>

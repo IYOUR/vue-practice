@@ -76,10 +76,10 @@ router.beforeEach(({to, next, redirect}) => {
     			// 自动登录
     			store.commit('login');
     			// 获取用户信息
-    			Vue.$http.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
+    			axios.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
     			).then((response) => {
     				if(response.data.errcode == false){
-						Vue.$http.get('/user/getUserInfo.go'
+						axios.post('/user/getUserInfo.go'
 						).then((response) => {
 							console.log(response);
 							//store.commit('setUser', response.body.data);

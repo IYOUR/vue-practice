@@ -24,6 +24,7 @@ config.vue = {
             'css-loader!less-loader', {
                 publicPath: "../dist/css/"
             }
+
         )
     }
 };
