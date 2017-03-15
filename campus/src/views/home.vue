@@ -43,27 +43,7 @@
 </style>
 <template>
     <div class="layout">
-        <Menu mode="horizontal" theme="dark" active-key="1">
-            <div class="layout-logo"></div>
-            <div class="layout-nav">
-                <Menu-item key="1">
-                    <Icon type="ios-navigate"></Icon>
-                    导航一
-                </Menu-item>
-                <Menu-item key="2">
-                    <Icon type="ios-keypad"></Icon>
-                    导航二
-                </Menu-item>
-                <Menu-item key="3">
-                    <Icon type="ios-analytics"></Icon>
-                    导航三
-                </Menu-item>
-                <Menu-item key="4">
-                    <Icon type="ios-paper"></Icon>
-                    导航四
-                </Menu-item>
-            </div>
-        </Menu>
+        <nav-bar></nav-bar>
         <div class="layout-content">
             <Row>
                 <i-col span="5">
@@ -106,7 +86,10 @@
     </div>
 </template>
 <script>
-    export default {
-        
-    }
+import navBar from '../components/navBar.vue'
+  export default {
+     components: {
+		'nav-bar': navBar
+	}
+  }
 </script>

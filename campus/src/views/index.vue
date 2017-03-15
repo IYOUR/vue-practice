@@ -53,11 +53,8 @@
                     </div>
                 </i-col>
                 <i-col span="3" offset="7">
-                   
                         <i-button type="primary" @click="modal_login = true">登陆</i-button>
                         <i-button type="primary" @click="modal_register = true">注册</i-button>
-                  
-                   
                 </i-col>
                         
                 
@@ -194,6 +191,7 @@
                  this.$refs[name].validate((valid) => {
                     if (valid) {                     
                         if(name === "loginValidate"){
+                            console.log(this.$store.state.isLogin)
                             this.loginButton.text = "登陆中";
                             this.loginButton.loading = true;
                             this.$http.post('/user/loginUser.go', {

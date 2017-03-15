@@ -35,8 +35,12 @@ module.exports = {
                 loader: 'style!css!less?sourceMap'
             },
             {
-                test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: 'url-loader?limit=50000&name=fonts/[name].[hash].[ext]'
+                test: /\.(gif|jpg|png)\??.*$/,
+                loader: 'url-loader?limit=1500&name=images/[name].[hash].[ext]'
+            },
+            {
+                test: /\.(woff|eot|ttf|svg)\??.*$/,
+                loader: 'url-loader?limit=1500000&name=fonts/[name].[hash].[ext]'
             },
             {
                 test: /\.(html|tpl)$/,

@@ -6,15 +6,15 @@ const fs = require('fs');
 
 config.devtool = '#source-map'; // source-map
 config.output.publicPath = '/dist/'; // 资源路径
-config.output.filename = 'js/[name].js'; // 入口js命名
-config.output.chunkFilename = 'js/[name].chunk.js'; // 路由js命名
+config.output.filename = '[name].js'; // 入口js命名
+config.output.chunkFilename = '[name].chunk.js'; // 路由js命名
 
 config.vue = {
     loaders: {
         css: ExtractTextPlugin.extract(
             "style-loader",
             "css-loader?sourceMap", {
-                publicPath: "/dist/js/"
+                publicPath: "/dist/"
             }
         ),
         less: ExtractTextPlugin.extract(
