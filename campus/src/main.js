@@ -39,7 +39,9 @@ const store = new Vuex.Store({
   state: {
     isLogin: false,
     user: {},
-    access_token: ''
+    access_token: '',
+    loginModal: false,
+    registerModal: false
   },
   mutations: {
     setAccessToken(state, access_token) {
@@ -55,6 +57,12 @@ const store = new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user
+    },
+    setLoginModal(state,visible) {
+      state.loginModal = visible
+    },
+    setRegisterModal(state,visible) {
+      state.registerModal = visible
     }
   }
 })
@@ -64,36 +72,36 @@ let router = new VueRouter({
   history: false
 })
 router.map(Routers)
-// router.beforeEach(({to, next, redirect}) => {
-// window.scrollTo(0, 0)
-// // Auth验证
-// if (to.auth) {
-//     if (!store.state.isLogin) {
-//       if (localStorage.access_token) {
-//       // 自动登录
-//       store.commit('login')
-//       // 获取用户信息
-//       axios.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
-//       ).then((response) => {
-//         if (response.data.errcode === false) {
-//           axios.post('/user/getUserInfo.go'
-//           ).then((response) => {
-//           console.log(response)
-//          store.commit('setUser', response.data)
-//       }, (error) => {
-//   redirect({name: 'login'})
-// })
-// }
-// }, (error) => {
-// redirect({name: 'index'})
-// })
-// return true
-// }
-// redirect({name: 'index'})
-// }
-// }
-// return true 
-// })
+router.beforeEach(({to, next, redirect}) => {
+window.scrollTo(0, 0)
+// Auth验证
+if (to.auth) {
+    if (!store.state.isLogin) {
+      if (localStorage.access_token) {
+      // 自动登录
+      store.commit('login')
+      // 获取用户信息
+      axios.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
+      ).then((response) => {
+        if (response.data.errcode === false) {
+          axios.post('/user/getUserInfo.go'
+          ).then((response) => {
+          console.log(response)
+         store.commit('setUser', response.data)
+      }, (error) => {
+  redirect({name: 'login'})
+})
+}
+}, (error) => {
+redirect({name: 'index'})
+})
+return true
+}
+redirect({name: 'index'})
+}
+}
+return true 
+})
 router.afterEach(() => {
 })
 router.redirect({

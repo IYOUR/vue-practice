@@ -15,27 +15,21 @@
     }
 </style>
 <template>
-    <Menu mode="horizontal" theme="dark" active-key="1">
-        <div class="layout-logo"></div>
-        <div class="layout-nav">
-            <Menu-item key="1">
-                <Icon type="ios-navigate"></Icon>
-                导航一
-            </Menu-item>
-            <Menu-item key="2">
-                <Icon type="ios-keypad"></Icon>
-                导航二
-            </Menu-item>
-            <Menu-item key="3">
-                <Icon type="ios-analytics"></Icon>
-                导航三
-            </Menu-item>
-            <Menu-item key="4">
-                <Icon type="ios-paper"></Icon>
-                导航四
-            </Menu-item>
-        </div>
-    </Menu>
+  <Menu mode="horizontal" theme="dark" active-key="1">
+    <row> 
+        <i-col span="6"><div class="layout-logo"></div></i-col>
+        <i-col span="8">
+            <div> 
+                <i-input type="text" placeholder="请输入..." style="width: 40%;"></i-input>
+                <i-button type="primary" shape="circle" icon="ios-search"></i-button>
+            </div>
+        </i-col>
+        <i-col span="3" offset="7">
+                <i-button type="primary" @click="loginModal">登陆</i-button>
+                <i-button type="primary" @click="registerModal">注册</i-button>
+        </i-col>
+    </row> 
+  </Menu>   
 </template>
 <script>
 export default {
@@ -56,7 +50,13 @@ export default {
 					this.$route.router.go({name: 'login'});
 				}
 			})
-		}
+		},
+        loginModal () {
+            this.$store.commit('setLoginModal', true);
+        },
+        registerModal () {
+            this.$store.commit('setRegisterModal', true);
+        }
 	}
 }
 </script>
