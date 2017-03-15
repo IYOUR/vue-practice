@@ -50,7 +50,7 @@
         <i-col span="3" offset="7">
             <div v-if="isLogin">
                 <Badge count="3">
-                 <Poptip title="欢迎，{{user.name}}" placement="bottom-start" width="150">
+                 <Poptip  v-bind:title="user.username" placement="bottom-start" width="150">
                   <img class="head-image" src="../static/images/head.jpg"/>
                   <div class="api" slot="content">
                      <ul class="option">

@@ -192,7 +192,15 @@ export default {
 
                         this.$Message.destroy();
                         this.$Message.success('登陆成功!');
+                        this.$store.commit('setloginModal', false)
                         this.$router.go('/home');
+                        this.$http.post('/user/getUserInfo.go'
+                        ).then((response) => {
+                        console.log(response);
+                        store.commit('setUser', response.data);
+                        }, (error) => {
+                        redirect({name: 'login'});
+                        });
                         //this.$router.redirect({name: 'home'});
                     } 
                 },(error) => {
@@ -217,8 +225,8 @@ export default {
 
                     this.$Message.destroy();
                     this.$Message.success('注册成功,请登陆!');
-                    this.modal_register = false;
-                    this.modal_login = true;
+                    this.$store.commit('setRegisterModal', false);
+                    this.$store.commit('setloginModal', true);
                   }
                 },(error) => {
                     console.log(error);
