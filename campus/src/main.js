@@ -73,35 +73,36 @@ let router = new VueRouter({
 })
 router.map(Routers)
 router.beforeEach(({to, next, redirect}) => {
-window.scrollTo(0, 0)
+window.scrollTo(0, 0);
 // Auth验证
 if (to.auth) {
-    if (!store.state.isLogin) {
-      if (localStorage.access_token) {
+  if (!store.state.isLogin) {
+    if (localStorage.access_token) {
       // 自动登录
-      store.commit('login')
+      store.commit('login');
       // 获取用户信息
-      axios.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
+      Vue.$http.post('/user/loginUser.go', JSON.parse(localStorage.access_token)
       ).then((response) => {
-        if (response.data.errcode === false) {
-          axios.post('/user/getUserInfo.go'
-          ).then((response) => {
-          console.log(response)
-         store.commit('setUser', response.data)
+        if(response.data.errcode == false){
+        Vue.$http.get('/user/getUserInfo.go'
+        ).then((response) => {
+          console.log(response);
+          //store.commit('setUser', response.body.data);
+        }, (error) => {
+          redirect({name: 'login'});
+        });
+      }
       }, (error) => {
-  redirect({name: 'login'})
-})
+        redirect({name: 'index'});
+      });
+      return true;
+    }
+    redirect({name: 'index'});
+  }
 }
-}, (error) => {
-redirect({name: 'index'})
-})
-return true
-}
-redirect({name: 'index'})
-}
-}
-return true 
-})
+return true; 
+});
+
 router.afterEach(() => {
 })
 router.redirect({
