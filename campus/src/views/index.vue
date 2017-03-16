@@ -85,8 +85,8 @@
     </p>
     <div style="text-align:left">
         <i-form v-ref:register-validate :model="registerValidate" :rules="ruleValidate" :label-width="80">
-            <Form-item label="用户名" prop="name">
-                <i-input :value.sync="registerValidate.name" placeholder="请输入用户名">
+            <Form-item label="用户名" prop="registerName">
+                <i-input :value.sync="registerValidate.registerName" placeholder="请输入用户名">
                     <Icon type="ios-person-outline" slot="prepend"></Icon>
                 </i-input>
             </Form-item>
@@ -135,6 +135,7 @@ export default {
             auto: false
         },
             registerValidate: {
+            registerName: '',    
             password: '',
             password_confirmation:'',
             mail: '',
@@ -149,14 +150,30 @@ export default {
         },
         ruleValidate: {
             name: [
-                { required: true, message: '用户名不能为空', trigger: 'blur' }
+                { required: true, message: '用户名不能为空', trigger: 'blur' },
+            ],
+            registerName: [
+                {required: true,validator: (rule, value, callback) => {
+                    if (!value) {
+                        return callback(new Error('用户名不能为空'));
+                    } else{
+                        this.$http.post('/user/checkAccount.go', {
+                        'username': value
+                        }).then((response) => {
+                           if (response.data.errcode === true){
+                               return callback(new Error('用户名已存在'));
+                           }     
+                        });
+                    }
+                    return callback();
+                }, trigger: 'blur'}
             ],
             password: [
                 { required: true, message: '密码不能为空', trigger: 'blur' },
                 { type: 'string', min: 6, message: '密码不能少于六个字符', trigger: 'blur' }
             ],
             password_confirmation: [    
-                {validator: (rule, value, callback) => {
+                {required: true,validator: (rule, value, callback) => {
                     if (!value) {
                         return callback(new Error('请输入密码'));
                     }
@@ -217,17 +234,12 @@ export default {
                 this.registerButton.text = "注册中";
                 this.registerButton.loading = true;
                     this.$http.post('/user/registUser.go', {
-                    'username': this.registerValidate.name,
+                    'username': this.registerValidate.registerName,
                     'eMail': this.registerValidate.mail,
                     'password': this.registerValidate.password
                 }).then((response) => {
                     console.log(response)
-                  if (response.data.errcode == false){
-                    this.$store.commit('setAccessToken', response.data.info);
-                    this.$store.commit('login');
-                    localStorage.access_token = this.$store.state.access_token;
-
-
+                  if (response.data.errcode == false){                  
                     this.$Message.destroy();
                     this.$Message.success('注册成功,请登陆!');
                     this.$refs[name].resetFields();
