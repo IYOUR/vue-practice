@@ -192,9 +192,11 @@ export default {
 
                         this.$Message.destroy();
                         this.$Message.success('登陆成功!');
+                        this.loginButton.text = "登陆";
+                        this.loginButton.loading = false;
+                        this.$refs[name].resetFields();
                         this.$store.commit('setLoginModal', false)
                         //this.$router.go('/home');
-                        sessionStorage.setItem("isLogin", true);
                         this.$store.commit('login');
                         this.$http.post('/user/getUserInfo.go'
                         ).then((response) => {
@@ -228,6 +230,9 @@ export default {
 
                     this.$Message.destroy();
                     this.$Message.success('注册成功,请登陆!');
+                    this.$refs[name].resetFields();
+                    this.registerButton.text = "注册";
+                    this.registerButton.loading = false;
                     this.$store.commit('setRegisterModal', false);
                     this.$store.commit('setLoginModal', true);
                   }

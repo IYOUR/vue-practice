@@ -76,6 +76,7 @@ router.beforeEach(({to, next, redirect}) => {
 window.scrollTo(0, 0);
 // Auth验证
 if (sessionStorage.getItem("userInfo")!==null){
+  console.log(sessionStorage.getItem("userInfo"))
   store.commit('login');
   store.commit('setUser',JSON.parse(sessionStorage.getItem("userInfo")));
 }

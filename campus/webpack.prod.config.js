@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const config = require('./webpack.base.config.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
 const fs = require('fs');
 
 config.output.publicPath = path.join('./'); // 资源路径,根据需要可改为cdn地址
@@ -53,6 +54,11 @@ config.plugins = (config.plugins || []).concat([
         filename: '/index.html',
         template: './src/template/index.ejs',
         inject: false
+    }),
+    new CleanWebpackPlugin(['dist'], {
+      root: 'webpack.base.config.js',
+      verbose: true,
+      dry: false
     })
 ]);
 

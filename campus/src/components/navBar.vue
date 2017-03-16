@@ -88,7 +88,7 @@ export default {
 				cancelText: '取消',
 				okText: '安全退出',
 				onOk: () => {
-                    localStorage.removeItem("localStorage.access_token");
+                    localStorage.removeItem("access_token");
                     sessionStorage.removeItem("userInfo");
                     this.$store.commit('logout');
 					this.$router.go('/index');
