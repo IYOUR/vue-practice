@@ -56,7 +56,7 @@ config.plugins = (config.plugins || []).concat([
         inject: false
     }),
     new CleanWebpackPlugin(['dist'], {
-      root: 'webpack.base.config.js',
+      root: '/',
       verbose: true,
       dry: false
     })
