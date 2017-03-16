@@ -55,7 +55,7 @@
                   <div class="api" slot="content">
                      <ul class="option">
                         <li><Icon type="chatbox-working"></Icon><span>消息</span></li>
-                        <li><router-link to="/home"><Icon type="person"></Icon><span>个人中心</span></router-link></li>
+                        <li @click="home"><Icon type="person"></Icon><span>个人中心</span></li>
                         <li @click="logOut"><Icon type="power"></Icon><span>退出</span></li>
                      </ul>
                   </div>
@@ -88,11 +88,20 @@ export default {
 				cancelText: '取消',
 				okText: '安全退出',
 				onOk: () => {
-					this.$store.commit('logout');
-					this.$route.router.go({name: 'login'});
+                    localStorage.removeItem("localStorage.access_token");
+                    sessionStorage.removeItem("userInfo");
+                    this.$store.commit('logout');
+					this.$router.go('/index');
+                    this.$http.post('/user/loginUserOut.go'
+                    ).then((response) => {
+                    }, (error) => {
+                    });
 				}
 			})
 		},
+        home () {
+            this.$router.go('/home');
+        },
         loginModal () {
             this.$store.commit('setLoginModal', true);
         },
