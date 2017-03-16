@@ -50,13 +50,13 @@
         <i-col span="3" offset="7">
             <div v-if="isLogin">
                 <Badge count="3">
-                 <Poptip  v-bind:title="user.username" placement="bottom-start" width="150">
+                 <Poptip  v-bind:title="'欢迎，'+userInfo.username" placement="bottom-start" width="150">
                   <img class="head-image" src="../static/images/head.jpg"/>
                   <div class="api" slot="content">
                      <ul class="option">
                         <li><Icon type="chatbox-working"></Icon><span>消息</span></li>
-                        <li><Icon type="person"></Icon><span>个人中心</span></li>
-                        <li><Icon type="power"></Icon><span>退出</span></li>
+                        <li><router-link to="/home"><Icon type="person"></Icon><span>个人中心</span></router-link></li>
+                        <li @click="logOut"><Icon type="power"></Icon><span>退出</span></li>
                      </ul>
                   </div>
                  </Poptip> 
@@ -81,7 +81,7 @@ export default {
         }
 	},
 	methods: {
-		logout () {
+		logOut () {
 			this.$Modal.confirm({
 				title: '警告',
 				content: '<p>确定退出当前账号？</p>',

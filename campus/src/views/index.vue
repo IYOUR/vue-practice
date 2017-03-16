@@ -192,12 +192,15 @@ export default {
 
                         this.$Message.destroy();
                         this.$Message.success('登陆成功!');
-                        this.$store.commit('setloginModal', false)
-                        this.$router.go('/home');
+                        this.$store.commit('setLoginModal', false)
+                        //this.$router.go('/home');
+                        sessionStorage.setItem("isLogin", true);
+                        this.$store.commit('login');
                         this.$http.post('/user/getUserInfo.go'
                         ).then((response) => {
                         console.log(response);
-                        store.commit('setUser', response.data);
+                        this.$store.commit('setUser', response.data);
+                        sessionStorage.setItem("userInfo", JSON.stringify(response.data));
                         }, (error) => {
                         redirect({name: 'login'});
                         });
@@ -226,7 +229,7 @@ export default {
                     this.$Message.destroy();
                     this.$Message.success('注册成功,请登陆!');
                     this.$store.commit('setRegisterModal', false);
-                    this.$store.commit('setloginModal', true);
+                    this.$store.commit('setLoginModal', true);
                   }
                 },(error) => {
                     console.log(error);
