@@ -156,16 +156,22 @@ export default {
                 {required: true,validator: (rule, value, callback) => {
                     if (!value) {
                         return callback(new Error('用户名不能为空'));
-                    } else{
+                    } 
+                    if (value) {
+                        var check = () => {
                         this.$http.post('/user/checkAccount.go', {
                         'username': value
                         }).then((response) => {
-                           if (response.data.errcode === true){
-                               return callback(new Error('用户名已存在'));
-                           }     
+                           if (response.data.errcode === false){
+                                return callback(new Error('用户已存在'));
+                           }
+                          
                         });
                     }
-                    return callback();
+                    return check();
+
+                  }
+                return callback();
                 }, trigger: 'blur'}
             ],
             password: [
