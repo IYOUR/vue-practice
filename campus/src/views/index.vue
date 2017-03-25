@@ -156,8 +156,7 @@ export default {
                 {required: true,validator: (rule, value, callback) => {
                     if (!value) {
                         return callback(new Error('用户名不能为空'));
-                    } 
-                    if (value) {
+                    } else{
                         var check = () => {
                         this.$http.post('/user/checkAccount.go', {
                         'username': value
@@ -168,7 +167,7 @@ export default {
                           
                         });
                     }
-                    return check();
+                     return check();
 
                   }
                 return callback();
