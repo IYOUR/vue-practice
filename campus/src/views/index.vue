@@ -176,7 +176,7 @@ export default {
                             }
                         }
 
-                        rueturn check(isRepeat);
+                        return check(isRepeat);
 
                   }
                 return callback();
