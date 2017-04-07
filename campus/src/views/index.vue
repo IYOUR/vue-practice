@@ -157,17 +157,26 @@ export default {
                     if (!value) {
                         return callback(new Error('用户名不能为空'));
                     } else{
-                        var check = () => {
-                        this.$http.post('/user/checkAccount.go', {
-                        'username': value
-                        }).then((response) => {
-                           if (response.data.errcode === false){
+                        var that = this;
+                        var isRepeat = function() {
+                            that.$http.post('/user/checkAccount.go', {
+                                'username': value
+                             }).then((response) => {
+                                if (response.data.errcode === false){
+                                    return true;
+                                 } else {
+                                     return false;
+                                 } 
+                             })
+                        }
+                        var check = function (callback) {
+                            var result = callback();
+                            if(result){
                                 return callback(new Error('用户已存在'));
-                           }
-                          
-                        });
-                    }
-                     return check();
+                            }
+                        }
+
+                        rueturn check(isRepeat);
 
                   }
                 return callback();
