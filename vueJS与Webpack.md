@@ -12,7 +12,7 @@
 - 在之前的项目开发中当我们需要使用一个外部的JS框架或库的时候，通常是将需要的JS文件下载下来，然后放入项目文件夹 中，在html中通过script标签引入进来或者是加上CDN的地址即可。但是，这并不是一个好的项目开发形式，不利于项目的维护与更新。在一个完整的vue实际应用中，必须要一系列的工具，包括：模块化，转译，预处理，热加载，静态检测和自动化测试等。对于一个需要长期维护和大型的项目而言，这些工具是很重要的，虽然刚开始刚开始配置初始化这些并不是很容易.但通过vue-cli这个简单的构建工具，用几个默认的步骤就可以快速的构建一个完善的初始化Vue.js项目。在vueJs官方工具vue-cli中使用了Webpack作为模块化打包工具，同时webpack也完全适用于vue.js进行组件化开发。
 
 > 开始上手安装
-#### 开始安装前得确保你的电脑上已经装好Node JS环境以及相应的包管理器NPM
+- 开始安装前得确保你的电脑上已经装好Node JS环境以及相应的包管理器NPM
 ```
 # 安装vue-cli
 npm install -g vue-cli
@@ -59,4 +59,93 @@ npm run dev
 |-- favicon.ico                      // 浏览器标签图标
 |-- index.html                       // 入口页面
 |-- package.json                     // 项目基本信息
+```
+### webpack配置
+
+- build目录下的webpack配置文件
+
+- webpack.base.conf.js
+
+- 入口文件 entry
+```
+entry: {
+  app: '.src/main.js'
+}
+```
+- 输出文件 output
+
+- config 的配置在 config/index.js 文件中
+```
+output: {
+  path: config.build.assetsRoot, //导出目录的绝对路径
+  filename: '[name].js', //导出文件的文件名
+  publicPath: process.env.NODE_ENV === 'production'? config.build.assetsPublicPath : config.dev.assetsPublicPath //生产模式或开发模式下html、js等文件内部引用的公共路径
+}
+```
+### 模块解析 module用来处理项目不同类型的模块。
+```
+module: {
+  rules: [
+    {
+      test: /\.vue$/, // vue文件后缀
+      loader: 'vue-loader', //使用vue-loader处理
+      options: vueLoaderConfig //options是对vue-loader做的额外选项配置
+    },
+    {
+      test: /\.js$/, // js文件后缀
+      loader: 'babel-loader', //使用babel-loader处理
+      include: [resolve('src'), resolve('test')] //必须处理包含src和test文件夹
+    },
+    {
+      test: /\.(png|jpe?g|gif|svg)(\?.*)?$/, //图片后缀
+      loader: 'url-loader', //使用url-loader处理
+      query: {  // query是对loader做额外的选项配置
+        limit: 10000, //图片小于10000字节时以base64的方式引用
+        name: utils.assetsPath('img/[name].[hash:7].[ext]') //文件名为name.7位hash值.拓展名
+      }
+    }，
+    {
+      test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/, //字体文件
+      loader: 'url-loader', //使用url-loader处理
+      query: {
+        limit: 10000,  //字体文件小于1000字节的时候处理方式
+        name: utils.assetsPath('fonts/[name].[hash:7].[ext]') //文件名为name.7位hash值.拓展名
+      }
+    }
+  ]
+}
+```
+### 插件配置
+```
+plugins: [
+  new webpack.DefinePlugin({ // 编译时配置的全局变量
+    'process.env': config.dev.env //当前环境为开发环境
+  }),
+  new webpack.HotModuleReplacementPlugin(), //热更新插件
+  new webpack.NoEmitOnErrorPlugin(), //不触发错误,即编译后运行的包正常运行
+  new HtmlWebpackPlugin({  //自动生成html文件,比如编译后文件的引入
+    filename: 'index.html', //生成的文件名
+    template: 'index.html', //模板
+    inject: true
+  }),
+  new FriendlyErrorsPlugin() //友好的错误提示
+]
+```
+### 输出文件 output
+```
+output: {
+  //导出文件目录
+  path: config.build.assetsRoot, 
+  //导出的文件名
+  filename: utils.assetsPath('js/[name].[chunkhash].js'), 
+  //非入口文件的文件名，而又需要被打包出来的文件命名配置,如按需加载的模块
+  chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+}
+```
+### 在 package.json 文件中定义了 dev 运行的脚本
+```
+"scripts": {
+   "dev": "node build/dev-server.js",
+   "build": "node build/build.js"
+}
 ```
