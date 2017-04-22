@@ -156,29 +156,30 @@ export default {
                 {required: true,validator: (rule, value, callback) => {
                     if (!value) {
                         return callback(new Error('用户名不能为空'));
-                    } else{
-                        var that = this;
-                        var isRepeat = function() {
-                            that.$http.post('/user/checkAccount.go', {
-                                'username': value
-                             }).then((response) => {
-                                if (response.data.errcode === false){
-                                    return true;
-                                 } else {
-                                     return false;
-                                 } 
-                             })
-                        }
-                        var check = function (callback) {
-                            var result = callback();
-                            if(result){
-                                return callback(new Error('用户已存在'));
-                            }
-                        }
+                    }
+                //      else{
+                //         var that = this;
+                //         var isRepeat = function() {
+                //             that.$http.post('/user/checkAccount.go', {
+                //                 'username': value
+                //              }).then((response) => {
+                //                 if (response.data.errcode === false){
+                //                     return true;
+                //                  } else {
+                //                      return false;
+                //                  } 
+                //              })
+                //         }
+                //         var check = function (callback) {
+                //             var result = callback();
+                //             if(result){
+                //                 return callback(new Error('用户已存在'));
+                //             }
+                //         }
 
-                        return check(isRepeat);
+                //         return check(isRepeat);
 
-                  }
+                //   }
                 return callback();
                 }, trigger: 'blur'}
             ],
@@ -217,7 +218,7 @@ export default {
                     'username': this.loginValidate.name,
                     'password': this.loginValidate.password
                 }).then((response) => {
-                    if (response.data.errcode == false) {
+                    if (response.data.errcode == true) {
                         this.$store.commit('login');
                         localStorage.access_token = JSON.stringify({'username': this.loginValidate.name,'password': this.loginValidate.password});
 
@@ -238,8 +239,14 @@ export default {
                         redirect({name: 'login'});
                         });
                         //this.$router.redirect({name: 'home'});
-                    } 
+                    }
+                  else {
+                       this.$Message.error('用户名不存在或密码错误!');
+                       this.loginButton.text = "登陆";
+                       this.loginButton.loading = false;
+                  }
                 },(error) => {
+                    this.$Message.error('用户名不存在或密码错误!');
                     console.log(error);
                 });
 
@@ -247,13 +254,13 @@ export default {
             if (name === "registerValidate") {
                 this.registerButton.text = "注册中";
                 this.registerButton.loading = true;
-                    this.$http.post('/user/registUser.go', {
+                    this.$http.post('/user/register', {
                     'username': this.registerValidate.registerName,
                     'eMail': this.registerValidate.mail,
                     'password': this.registerValidate.password
                 }).then((response) => {
                     console.log(response)
-                  if (response.data.errcode == false){                  
+                if (response.data.errcode == true){                  
                     this.$Message.destroy();
                     this.$Message.success('注册成功,请登陆!');
                     this.$refs[name].resetFields();
@@ -262,6 +269,11 @@ export default {
                     this.$store.commit('setRegisterModal', false);
                     this.$store.commit('setLoginModal', true);
                   }
+                else {
+                    this.$Message.error(response.data.errMsg);
+                    this.registerButton.text = "注册";
+                    this.registerButton.loading = false;
+                }  
                 },(error) => {
                     console.log(error);
                 });                           

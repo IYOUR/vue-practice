@@ -19,6 +19,7 @@
         background: #eee;
         border-radius: 6px;
         display: inline-block;
+        cursor:pointer;
     }  
     .option{
         color: #464c5b;

@@ -20,7 +20,7 @@ router.post('/login',function(req, res) {
 		if(data.status == 99999) {
 			req.session.user = data.results[0].username;
 			req.session.userid = data.results[0].id;
-			res.json({status:99999,id:data.results[0].id,errcode:false,});
+			res.json({status:99999,id:data.results[0].id,errcode:true});
 			res.end();
 		}else{
 			res.json({status:00000});
@@ -34,20 +34,20 @@ router.post('/login',function(req, res) {
 
 //注册
 router.post('/register',function(req, res) {
-	var _user = req.body.user;
-	var name = _user.name;
-	var password = _user.password;
-	console.log(_user);
-	select('SELECT * FROM _user WHERE name = "'+ name + '";')
+	var name = req.body.username;
+	var password = req.body.password;
+	var email = req.body.eMail;
+	console.log(req.body);
+	select('SELECT * FROM user WHERE username = "'+ name + '";')
 		.then(function(data) {
 			if(data.status == 99999) { 
 				console.log("已有此用户名")
-				res.json({status:00000});
+				res.json({status:00000,errcode:false,errMsg:"注册失败，已存在此用户名！"});
 				res.end();
 			}else {
-				select('INSERT INTO _user(name,password) VALUES ("'+name+'", "'+password+'");')
+				select('INSERT INTO user(username,password) VALUES ("'+name+'", "'+password+'");')
 				.then(function(data) {
-					res.json({status:99999});
+					res.json({status:99999,errcode:true,errMsg:"注册成功！"});
 					res.end();
 				}).catch(function(err){})
 			}			
