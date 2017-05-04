@@ -45,7 +45,7 @@ router.post('/register',function(req, res) {
 				res.json({status:00000,errcode:false,errMsg:"注册失败，已存在此用户名！"});
 				res.end();
 			}else {
-				select('INSERT INTO user(username,password) VALUES ("'+name+'", "'+password+'");')
+				select('INSERT INTO user(username,password,e_mail) VALUES ("'+name+'", "'+password+'", "'+email+'");')
 				.then(function(data) {
 					res.json({status:99999,errcode:true,errMsg:"注册成功！"});
 					res.end();
