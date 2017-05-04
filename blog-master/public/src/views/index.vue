@@ -44,6 +44,7 @@
 <template>
 <div class="layout">
     <nav-bar></nav-bar>
+    <main-content></main-content>
     <div class="layout-copy">
         2011-2016 &copy; TalkingData
     </div>
@@ -117,6 +118,7 @@
 </template>
 <script>
 import navBar from '../components/navBar.vue'
+import mainContent from '../components/mainContent.vue'
 export default {
   computed: {
 		modal_login () {
@@ -290,7 +292,8 @@ export default {
     }
   },
   components: {
-    'nav-bar': navBar
+    'nav-bar': navBar,
+    'main-content': mainContent
   }       
 }
 </script>
