@@ -1,15 +1,32 @@
 <style scoped>
-
+.demo-carousel{
+    height:60vh;
+    width:100%;
+    background:#222;
+}
 </style>
 <template>
-    <Tabs value="name1">
-        <Tab-pane label="标签一" name="name1">标签一的内容</Tab-pane>
-        <Tab-pane label="标签二" name="name2">标签二的内容</Tab-pane>
-        <Tab-pane label="标签三" name="name3">标签三的内容</Tab-pane>
-    </Tabs>
+    <Carousel autoplay v-model="value">
+        <Carousel-item>
+            <div class="demo-carousel">1</div>
+        </Carousel-item>
+        <Carousel-item>
+            <div class="demo-carousel">2</div>
+        </Carousel-item>
+        <Carousel-item>
+            <div class="demo-carousel">3</div>
+        </Carousel-item>
+        <Carousel-item>
+            <div class="demo-carousel">4</div>
+        </Carousel-item>
+    </Carousel>
 </template>
 <script>
-export default {
-
-}
+    export default {
+        data () {
+            return {
+                value: 0
+            }
+        }
+    }
 </script>
