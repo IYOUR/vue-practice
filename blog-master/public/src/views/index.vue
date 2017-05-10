@@ -40,14 +40,22 @@
         padding: 10px 0 20px;
         color: #9ea7b4;
     }
+    .slider{
+        width:100%;
+    }
 </style>
 <template>
+
 <div class="layout">
     <nav-bar></nav-bar>
-    <main-content></main-content>
-    <div class="layout-copy">
-        2011-2016 &copy; TalkingData
-    </div>
+
+</div>
+
+ 
+<main-content></main-content>
+<div class="layout-copy">
+    2011-2016 &copy; TalkingData
+</div>
   <Modal :visible.sync="modal_login" :mask-closable="false" @on-cancel="closeModal('loginValidate')" width="360">
     <p slot="header" style="color:#0c6;text-align:center">
         <Icon type="information-circled"></Icon>
@@ -113,8 +121,7 @@
     <div slot="footer">
         <i-button type="success" @click="handleSubmit('registerValidate')" size="large" long :loading="registerButton.loading">{{registerButton.text}}</i-button>
     </div>
-  </Modal>    
-</div>       
+  </Modal>        
 </template>
 <script>
 import navBar from '../components/navBar.vue'
