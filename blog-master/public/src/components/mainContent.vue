@@ -7,7 +7,7 @@
 
 </style>
 <template>
-    <Carousel>
+    <Carousel autoplay>
         <Carousel-item>
             <div class="demo-carousel">1</div>
         </Carousel-item>

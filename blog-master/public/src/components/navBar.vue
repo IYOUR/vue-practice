@@ -39,37 +39,38 @@
     } 
 </style>
 <template>
-  <Menu mode="horizontal" theme="dark" active-key="1">
-    <row> 
-        <i-col span="6"><div class="layout-logo"></div></i-col>
-        <i-col span="8">
-            <div> 
-                <i-input type="text" placeholder="请输入..." style="width: 40%;"></i-input>
-                <i-button type="primary" shape="circle" icon="ios-search"></i-button>
+    <Row>
+        <i-col span="1">col-12</i-col>
+        <i-col span="4">col-12</i-col>
+        <i-col span="15">col-12</i-col>
+        <i-col span="4">
+            <div v-if="isLogin" style="text-align:center;">
+                <span>
+                    <Badge count="3">
+                        <Poptip  v-bind:title="'欢迎，'+userInfo.username" placement="bottom-start" width="150">
+                        <img class="head-image" src="../static/images/head.jpg"/>
+                        <div class="api" slot="content">
+                            <ul class="option">
+                            <li><Icon type="chatbox-working"></Icon><span>消息</span></li>
+                            <li @click="home"><Icon type="person"></Icon><span>个人中心</span></li>
+                            <li @click="logOut"><Icon type="power"></Icon><span>退出</span></li>
+                            </ul>
+                        </div>
+                        </Poptip> 
+                    </Badge>
+                </span>
             </div>
+            <div v-else="isLogin" style="text-align:center;">
+                <span>
+                    <Button-group shape="circle">
+                        <i-button type="ghost" @click="loginModal">登录</i-button>
+                        <i-button type="ghost" @click="registerModal">注册</i-button>
+                    </Button-group>
+                </span>
+
+            </div>      
         </i-col>
-        <i-col span="3" offset="7">
-            <div v-if="isLogin">
-                <Badge count="3">
-                 <Poptip  v-bind:title="'欢迎，'+userInfo.username" placement="bottom-start" width="150">
-                  <img class="head-image" src="../static/images/head.jpg"/>
-                  <div class="api" slot="content">
-                     <ul class="option">
-                        <li><Icon type="chatbox-working"></Icon><span>消息</span></li>
-                        <li @click="home"><Icon type="person"></Icon><span>个人中心</span></li>
-                        <li @click="logOut"><Icon type="power"></Icon><span>退出</span></li>
-                     </ul>
-                  </div>
-                 </Poptip> 
-                </Badge>
-            </div>
-            <div v-else="isLogin">
-                <i-button type="primary" @click="loginModal">登陆</i-button>
-                <i-button type="primary" @click="registerModal">注册</i-button>
-            </div>                           
-        </i-col>
-    </row> 
-  </Menu>   
+    </Row> 
 </template>
 <script>
 export default {
