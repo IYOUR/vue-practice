@@ -1,12 +1,13 @@
 <style scoped>
 .demo-carousel{
-    height:60vh;
+    height:50vh;
     width:100%;
-    background:#222;
+    background:#333;
 }
+
 </style>
 <template>
-    <Carousel autoplay v-model="value">
+    <Carousel>
         <Carousel-item>
             <div class="demo-carousel">1</div>
         </Carousel-item>
@@ -23,10 +24,6 @@
 </template>
 <script>
     export default {
-        data () {
-            return {
-                value: 0
-            }
-        }
+        
     }
 </script>

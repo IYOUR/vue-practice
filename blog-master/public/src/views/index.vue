@@ -1,6 +1,6 @@
 <style scoped>
     .layout{
-        border: 1px solid #d7dde4;
+       
         background: #f5f7f9;
     }
     .layout-logo{
@@ -40,21 +40,15 @@
         padding: 10px 0 20px;
         color: #9ea7b4;
     }
-    .slider{
-        width:100%;
-    }
-</style>
+</style>    
 <template>
 
 <div class="layout">
     <nav-bar></nav-bar>
-
-</div>
-
- 
-<main-content></main-content>
-<div class="layout-copy">
-    2011-2016 &copy; TalkingData
+    <main-content></main-content>
+    <div class="layout-copy">
+        2011-2016 &copy; TalkingData
+    </div>
 </div>
   <Modal :visible.sync="modal_login" :mask-closable="false" @on-cancel="closeModal('loginValidate')" width="360">
     <p slot="header" style="color:#0c6;text-align:center">
