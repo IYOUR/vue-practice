@@ -45,7 +45,7 @@
 
 <div class="layout">
     <nav-bar></nav-bar>
-    <main-content></main-content>
+       <main-content></main-content>
     <div class="layout-copy">
         2011-2016 &copy; TalkingData
     </div>

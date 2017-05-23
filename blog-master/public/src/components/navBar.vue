@@ -14,8 +14,8 @@
         margin: 0 auto;
     }
     .head-image{
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         background: #eee;
         border-radius: 6px;
         display: inline-block;
@@ -24,6 +24,7 @@
     .option{
         color: #464c5b;
         font-size: 14px;
+        text-align:left;
         cursor: pointer;
     }
     .option li{
@@ -37,17 +38,26 @@
     .option li>span{
         padding-left: 5px;
     } 
+    .navigation{
+        text-align:center;
+        height:65px;
+        line-height:65px;
+    }
 </style>
 <template>
-    <Row>
+    <Row class="navigation">
         <i-col span="1">col-12</i-col>
         <i-col span="4">col-12</i-col>
-        <i-col span="15">col-12</i-col>
+        <i-col span="15">
+            <span>
+            <search-input></search-input>
+            </span>    
+        </i-col>
         <i-col span="4">
-            <div v-if="isLogin" style="text-align:center;">
+            <div v-if="isLogin">
                 <span>
                     <Badge count="3">
-                        <Poptip  v-bind:title="'欢迎，'+userInfo.username" placement="bottom-start" width="150">
+                        <Poptip  v-bind:title="'欢迎，'+userInfo.username" placement="bottom" width="150">
                         <img class="head-image" src="../static/images/head.jpg"/>
                         <div class="api" slot="content">
                             <ul class="option">
@@ -60,7 +70,7 @@
                     </Badge>
                 </span>
             </div>
-            <div v-else="isLogin" style="text-align:center;">
+            <div v-else="isLogin">
                 <span>
                     <Button-group shape="circle">
                         <i-button type="ghost" @click="loginModal">登录</i-button>
@@ -73,6 +83,7 @@
     </Row> 
 </template>
 <script>
+import searchInput from './searchInput.1'
 export default {
 	computed: {
 		isLogin () {
@@ -110,6 +121,9 @@ export default {
         registerModal () {
             this.$store.commit('setRegisterModal', true);
         }
-	}
+	},
+    components: {
+    'search-input': searchInput
+  }  
 }
 </script>
