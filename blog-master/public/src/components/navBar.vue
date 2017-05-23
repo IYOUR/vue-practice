@@ -43,11 +43,19 @@
         height:65px;
         line-height:65px;
     }
+    .logo{
+        font-family: -apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+        font-size:25px;
+    }
+    .home{
+         font-family: -apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+         font-size:14px;
+    }
 </style>
 <template>
     <Row class="navigation">
-        <i-col span="1">col-12</i-col>
-        <i-col span="4">col-12</i-col>
+        <i-col span="3"><div style="height:65px;"><span class="logo">简书</span></div></i-col>
+        <i-col span="2"><span class="home">首页</span></i-col>
         <i-col span="15">
             <span>
             <search-input></search-input>

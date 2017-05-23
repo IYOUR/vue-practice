@@ -132,7 +132,7 @@
     <div class="search-wrapper active">
         <div class="input-holder">
             <input type="text" class="search-input" placeholder="Type to search" />
-            <button class="search-icon"><span></span></button>
+            <button class="search-icon"></button>
         </div>
 
     </div>
