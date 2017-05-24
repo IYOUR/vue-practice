@@ -120,6 +120,7 @@
 <script>
 import navBar from '../components/navBar.vue'
 import mainContent from '../components/mainContent.vue'
+import mainContent from '../components/mainContent1.vue'
 export default {
   computed: {
 		modal_login () {
